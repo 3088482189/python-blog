@@ -1,0 +1,27 @@
+<meta name='description' itemprop="description" content="">
+<meta name="keywords" content="{{config.author}}">
+<meta property="og:url" content="{{config.site_url}}">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="{{config.site_name}}">
+<meta property="og:image" content="{{config.site_icon}}">
+<meta property="og:description" content="">
+<link rel="canonical" href="{{config.site_url}}">
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": "Website",
+    "publisher":{
+        "@type":"Organization",
+        "name":"{{config.site_name}}",
+        "logo":"{{config.site_icon}}"
+    },
+    "url":"{{config.site_url}}",
+    "image":{
+        "@type":"ImageObject",
+        "url":"{{config.site_icon}}"
+    },
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "{{config.site_url}}"
+    },
+    "description":""
+}</script>

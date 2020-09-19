@@ -1,0 +1,67 @@
+.mdui-card{background: #fff;}
+.mdui-card-header{
+    background-color: #fff1f5;
+    color: #EB686D;
+}
+.mdui-card-menu{color: #EB686D;}
+.mdui-color-white,.read_more,footer .mdui-card{
+    background-color:  #f7a4b9 !important;
+    color: #fff !important;
+}
+.md-body .mdui-list-item-content,.md-body .mdui-text-color-black{
+    color: #000 !important;
+    font-weight: normal;
+}
+.mdui-text-color-black,.mdui-text-center,.mdui-list-item-content,#toc{
+    color: #fff !important;
+}
+.mdui-drawer{background-color: #f3a6b3;}
+html{
+    background-image: url("/img/pink_grid.webp");
+    background-color: #ffc9d4 !important;
+    background-attachment: fixed;
+}body{background: none;}
+.md-body blockquote{
+    color: #d38095;
+    background-color: #ffcbd84f;
+    border-left: 0.25em solid #f7a4b9;
+}
+.mdui-card.md-body a{color: #ff8bac !important;}
+.v .vwrap{border: 2px solid #f7a4b9 !important;}
+#totop,.vbtn,.vsys{
+    background: #f7a4b9 !important;
+    color: #fff !important;
+}
+.vnick,.vat{
+    color: #058aff !important;
+}
+.v .vlist .vcard .vcontent.expand:before{background:linear-gradient(180deg,#ffecf000,#ffecf0af) !important;}
+.v .vlist .vcard .vcontent.expand:after{background-color: #ffecf0af !important;}
+.mdui-chip{
+    background-color: #ffbeca;
+    color: #fff !important;
+}
+.mdui-menu{
+    background-color: #f3a6b3;
+    color: #fff;
+}
+.mdui-menu-item:hover,.md-body a:hover{color: #ff8bac !important;}
+.mdui-dialog{background-color: #f3a6b3 !important;color: #fff !important;}
+.mdui-dialog-title,.mdui-dialog-content{color: #fff !important;font-weight: bold;}
+.mdui-theme-accent-blue .mdui-textfield-focus .mdui-textfield-input{border-bottom-color: #fff !important;box-shadow: 1px 0 0 #fff;}
+.mdui-theme-accent-blue .mdui-textfield-focus .mdui-icon{color: #fff;}
+h1,h2,h3{color: #ff7d9e;}
+h1 a,h2 a,h3 a{color: #ff88a5;}
+.md-body h1,.md-body h2{border-bottom: 1.5px solid #f7a4b9;}
+.md-body hr{background-color: #f7a4b9;}
+
+details{border-left: .2rem solid #f7a4b9;}
+details summary{
+    cursor: pointer;
+    line-height: 2.5em;
+    outline: 0;
+    margin: 0 -.6rem;
+    padding: .1rem .0 .0 1rem;
+    border-bottom: .05rem solid #f7a4b981 !important;
+    background-color: #f7a4b93d !important;
+}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+<title>{{config.site_name}}</title>
+<link href="{{config.site_url}}" rel="self"/>
+<link href="{{config.site_url}}"/>
+<updated>{{last_build_time}}</updated>
+<author><name>{{config.author}}</name></author>
+<generator uri="https://zcmimi.github.io/py-blog">py-blog</generator>
+{% autoescape true %}
+{%for i in data.posts+data.pages-%}
+<entry>
+    <title>{{i.title}}</title>
+    <link href="{{i.link}}"/>
+    <updated>{{i.date}}</updated>
+    <summary type="html">{{i.preview|markdown}}</summary>
+</entry>
+{%-endfor%}
+{% endautoescape %}
+</feed>

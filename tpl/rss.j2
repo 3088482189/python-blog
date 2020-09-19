@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+<channel>
+<title>{{config.site_name}}</title>
+<link>{{config.site_url}}</link>
+<description>{{config.site_name}}</description>
+<lastBuildDate>{{last_build_time}}</lastBuildDate>
+<generator uri="https://zcmimi.github.io/py-blog">py-blog</generator>
+{% autoescape true %}
+{%for i in data.posts+data.pages-%}
+<item>
+    <title>{{i.title}}</title>
+    <link>{{i.link}}</link>
+    <description>{{i.preview|markdown}}</description>
+    <pubDate>{{i.date}}</pubDate>
+    <guid>{{config.site_url+i.addr}}</guid>
+</item>
+{%-endfor%}
+{% endautoescape %}
+</channel>
+</rss>

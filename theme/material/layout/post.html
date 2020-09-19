@@ -4,7 +4,7 @@
 <div class="mdui-card article">
     {%if t_config.theme=='beauty'%}
     <div class="mdui-card-media">
-        <img data-src="{{mg(thumbnail,randimg())}}" height="300px" style="object-fit: cover;" alt>
+        <img data-src="{{mg(thumbnail,randimg())}}" height="300px" style="object-fit: cover;" src='{{assets_rt}}/icon/loading.svg' alt>
         <div class="mdui-card-media-covered">
             <div class="mdui-card-primary">
                 <div class="mdui-card-primary-title">{{title}}</div>
@@ -19,42 +19,72 @@
     </div>
     {%endif%}
     <div class="mdui-card-header">
-        <img class="mdui-card-header-avatar" src="{{mg(avatar,t_config.avatar)}}" alt>
+        <img class="mdui-card-header-avatar" src="{{mg(avatar,t_config.avatar)}}" alt='avatar'>
         <div class="mdui-card-header-title">{{author}}</div>
         <div class="mdui-card-header-subtitle">{{date}}</div>
         <div class="mdui-card-menu">
-            <span id="{{title}}" class="leancloud_visitors" data-flag-title="Your Article Title" hidden>
-                <em class="post-meta-item-text">阅读量</em>
-                <i class="leancloud-visitors-count">1000000</i>
-            </span>
+            <button class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '文章分类'}" mdui-menu="{target:'#categories',align:'right',covered: false}">
+                <i class="mdui-icon material-icons">bookmark</i>
+            </button>
+            <ul class="mdui-menu" id="categories">{{gen_categories(categories)}}</ul>
+            {%if t_config.busuanzi.enable%}
+            <button class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '本文阅读量'}" mdui-menu="{target:'#visit_counter',align:'right',covered: false}">
+                <i class="mdui-icon material-icons">remove_red_eye</i>
+            </button>
+            <ul class="mdui-menu" id="visit_counter">
+                <li class="mdui-menu-item">
+                    <div id="busuanzi_container_page_pv">
+                        <center>本文总阅读量<span id="busuanzi_value_page_pv"></span>次</center>
+                    </div>
+                </li>
+            </ul>
+            {%endif%}
             {%include 'share_menu.html'%}
         </div>
     </div>
     <div class="mdui-card-content">
         {{html}}
-        <div id="md_out" class="markdown-body">{{content}}</div>
+        
+        {%if password%}
+        <div id="md-body" class="md-body" hidden>{{content|markdown_math|encrypt(password)}}</div>
+        <div class="mdui-textfield mdui-textfield-floating-label">
+            <label class="mdui-textfield-label">请输入密码:</label>
+            <input class="mdui-textfield-input" type="password" id="passwd">
+        </div>
+        <script src='https://cdn.jsdelivr.net/gh/brix/crypto-js@4.0.0/crypto-js.min.js'></script>
+<script>
+function de(data,passwd){while(passwd.length%16)passwd+='\0';var decrypt=CryptoJS.AES.decrypt(data,CryptoJS.enc.Utf8.parse(passwd),{mode: CryptoJS.mode.ECB,padding: CryptoJS.pad.Pkcs7});return decrypt.toString(CryptoJS.enc.Utf8);}
+var md_body=document.getElementById('md-body'),passwd=document.getElementById('passwd');
+const content=md_body.innerText;
+passwd.oninput=function(){
+    var data=de(content,this.value);
+    if(data){
+        md_body.innerHTML=data;
+        this.parentElement.hidden=1;
+        md_body.hidden=0;
+        highlight(),gentoc("md-body"),katex_();
+    }
+}
+</script>
+        {%else%}
+        <div id="md-body" class="md-body">{{content|markdown_math}}</div>
+        {%endif%}
     </div>
 </div>
 <div class="mdui-row-xs-3 article">
     <div class="mdui-col">
-        <a href="{{pre_link}}" class="mdui-text-color-black" id='pre_button'>
+        <a href="{{pre.link}}" class="mdui-text-color-black" id='pre_button'>
             <i class="mdui-icon material-icons">arrow_back</i>
-            {{pre_title}}
+            {{pre.title}}
         </a>
     </div>
     <div class="mdui-col mdui-text-center">{{title}}</div>
     <div class="mdui-col">
-        <a href="{{nxt_link}}" class="mdui-text-color-black mdui-float-right" id='nxt_button'>
-            {{nxt_title}}
+        <a href="{{nxt.link}}" class="mdui-text-color-black mdui-float-right" id='nxt_button'>
+            {{nxt.title}}
             <i class="mdui-icon material-icons">arrow_forward</i>
         </a>
     </div>
 </div>
-<div class="mdui-card" style="margin-top: 50px;">
-    <div class="mdui-card-content">
-        {%if comment==True%}
-        {%include "comment.html"%}
-        {%else%}评论未开放{%endif%}
-    </div>
-</div>
+{%if comment%}{%include "comment.html"%}{%endif%}
 {%endblock%}

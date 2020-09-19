@@ -1,12 +1,17 @@
 {%macro gen_tags(tags,with_number=0)%}
-    {%for tag in tags%}
-        <a href="{{config.site_rt}}/tags/{{tag}}" class="mdui-chip mdui-text-color-black">
-            <span class="mdui-chip-title">{{tag}}</span>
-            {%if number%}
-                <div class='mdui-chip-icon'>{{len(tag)}}</div>
-            {%endif%}
-        </a>
-    {%endfor%}
+{%for tag in tags-%}
+<a href="{{config.site_rt}}tags/{{tag}}/" class="mdui-chip mdui-text-color-black">
+    <span class="mdui-chip-title">{{tag}}</span>
+    {%if number%}<div class='mdui-chip-icon'>{{len(tag)}}</div>{%endif%}
+</a>
+{%-endfor%}
+{%endmacro%}
+{%macro gen_categories(categories)%}
+{%for j in categories-%}
+<li class="mdui-menu-item">
+    <a href="{{config.site_rt}}categories/{{j|join('/')}}/">{{j|join('/')}}</a>
+</li>
+{%-endfor%}
 {%endmacro%}
 
 {%macro mg(x,y)%}
@@ -15,187 +20,74 @@
 
 {%macro randimg()%}
     {%if t_config.randomimg.type=='folder'%}
-        {{t_config.randomimg.path+'/'+range(0,t_config.randomimg.cnt)|random|string+'.'+t_config.randomimg.suf}}
+        {{t_config.randomimg.path+range(0,t_config.randomimg.cnt)|random|string+'.'+t_config.randomimg.suf}}
     {%else%}
         {{t_config.randomimg.list|random}}
     {%endif%}
 {%endmacro%}
 
 {%set assets_rt= t_config.assets_rt if t_config.assets_rt else '/assets'%}
+{%set Title=(title+' - ' if title else '') + config.site_name%}
 
 <!DOCTYPE html>
 <html lang="{{config.lang}}">
 <head>
-    <title>{{title+' - ' if title!=''}}{{config.site_name}}</title>
+    <title>{{Title}}</title>
+    {% include "seo.html" %}
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="dns-prefetch" href="{{config.site_url}}">
-    <link rel="stylesheet" href="{{assets_rt}}/mdui/css/mdui.min.css" type="text/css">
-    <script async src="{{assets_rt}}/mdui/js/mdui.min.js"></script>
-    <link rel="stylesheet" href="{{assets_rt}}/theme.css" type="text/css">
-    <link rel="stylesheet" href="{{assets_rt}}/icon/mqii/mqii.css" type="text/css">
-    <!--custom--><link rel="stylesheet" href="/custom.css" type="text/css">
-    <!--highlight-->
-    <link rel="stylesheet" href="{{assets_rt}}/github.min.css" type="text/css">
-    <script async src="{{assets_rt}}/highlight.min.js"></script>
-    <!--highlight end-->
-    <!-- markdown katex-->
-    <link rel="stylesheet" href="{{assets_rt}}/markdown.css" type="text/css">
-    {%if config.math%}
-    <link rel="stylesheet" href="{{assets_rt}}/katex/katex.min.css" type="text/css">
-    <script async src="{{assets_rt}}/katex/katex.min.js"></script>
-    {%endif%}
-    <!-- markdown katex end-->
+    {% include "css.html" %}
     <link rel="shortcut icon" href="{{config.site_icon}}">
-    <script async src='{{assets_rt}}/Valine.min.js'></script>
-    <script async src='{{assets_rt}}/pjax.js'></script>
-    <script async src='{{assets_rt}}/bundle.js'></script>
 </head>
 <body class="mdui-appbar-with-toolbar mdui-theme-accent-blue">
     <div class="mdui-progress" id='loading-progress' style="position: fixed;top:0;z-index: 999999;"><div class="mdui-progress-indeterminate"></div></div>
     <div id="theme_css"></div>
-    <div class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset mdui-color-white mdui-shadow-1">
-        <div class="mdui-toolbar mdui-color-theme">
-            <a href="javascript:drawer.toggle()" class="mdui-btn mdui-btn-icon mdui-ripple"><i class="mdui-icon material-icons">menu</i></a>
-            <a href="{{config.site_rt}}/" class="mdui-typo-title">{{config.site_name}}</a>
-            <div class="mdui-toolbar-spacer"></div>
-            <div class="mdui-row" id='toolbar-menu'>
-                {%for i in t_config.head_card.pages%}
-                <a href="{{config.site_rt}}{{t_config.head_card.pages[i]}}" class="mdui-col mdui-text-color-black">{{i}}</a>
-                {%endfor%}
-            </div><script>if(document.body.clientWidth<1078)document.getElementById('toolbar-menu').hidden=1;</script>
-            <button onclick="music_on();document.getElementById('music_button').hidden=1" id='music_button' class="mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: '是否来点音乐?'}">
-                <i class="mdui-icon material-icons">queue_music</i>
-            </button>
-            <button class="mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: '切换主题'}" mdui-menu="{target: '#theme_menu',align: 'right',covered: false}">
-                <i class="mdui-icon material-icons">view_quilt</i>
-            </button>
-            <ul class="mdui-menu" id="theme_menu" style="width: fit-content;">
-                <li class="mdui-menu-item" mdui-tooltip="{content: '开启/关闭 pjax'}"><a onclick="pjax_on()" id='pjax_button'>pjax_on</a></li>
-                <li class="mdui-menu-item" mdui-tooltip="{content: '回归原本'}"><a href="javascript:theme('day')">日间模式</a></li>
-                <li class="mdui-menu-item" mdui-tooltip="{content: '晚上要保护眼睛哦'}"><a href="javascript:theme('night')">夜间模式</a></li>
-                <li class="mdui-menu-item" mdui-tooltip="{content: '满足你的少女心吧'}"><a href="javascript:theme('pink')">粉红</a></li>
-                <li class="mdui-menu-item" mdui-tooltip="{content: '没什么,就是淡蓝色'}"><a href="javascript:theme('blue')">粉蓝</a></li>
-            </ul>
-            <button onclick="search_dialog.open();document.getElementById('search_input').focus();" class="mdui-btn mdui-btn-icon mdui-ripple"><i class="mdui-icon material-icons">search</i></button>
-            <button id='toc_button' class="mdui-btn mdui-btn-icon mdui-ripple" onclick="toc_drawer.toggle();" hidden>
-                <i class="mdui-icon material-icons">format_list_numbered</i>
-            </button>
-        </div>
-    </div>
-    <div class="mdui-drawer mdui-drawer-close mdui-drawer-full-height mdui-drawer-right mdui-shadow-2" id="toc_drawer" hidden>
-        <ul class="mdui-list" id="toc"></ul>
-    </div>
-    
+    {%include "appbar.html"%}
     <div class="mdui-container">
         <div id='page_typ' hidden>{{page_typ}}</div>
         {%block content%}{%endblock%}
     </div>
+    {% include "drawer.html" %}
+    <div class="mdui-drawer mdui-drawer-close mdui-drawer-full-height mdui-drawer-right" id="toc_drawer" hidden>
+        <ul class="mdui-list" id="toc"></ul>
+    </div>
 </body>
 <!--top-->
-<button class="mdui-fab mdui-fab-mini mdui-ripple mdui-fab-fixed mdui-fab-hide" id="totop" onclick="totop()" style="z-index: 99999;">
+<button class="mdui-fab mdui-fab-mini mdui-fab-fixed mdui-fab-hide" id="totop" onclick="totop()" style="z-index: 99999;">
     <i class="mdui-icon material-icons">keyboard_arrow_up</i>
 </button>
 <!--top end-->
-<footer class="mdui-m-t-5">
-    <div class="mdui-card">
-        <div class="mdui-card-content mdui-p-a-5">
-            <div class="mdui-container">
-                <div class="mdui-row-sm-3">
-                    <div class="mdui-col">
-                        <div class="mdui-row">
-                            {%for i in t_config.footer.icons%}
-                                <div class="mdui-col-xs-4 mdui-col-sm-3 mdui-col-md-2">
-                                    <a href="{{t_config.footer.icons[i]}}">
-                                        <i class="mdui-icon mqii mqii-{{i}} mdui-text-color-black"></i>
-                                    </a>
-                                </div>
-                            {%endfor%}
-                        </div>
-                    </div>
-                    <div class="mdui-col mdui-text-center">
-                        <div>Copyright ©&nbsp;{{t_config.footer.site_create_date}}-{{t_config.footer.site_till_date}}&nbsp;{{config.site_name}}</div>
-                        <div>last build: {{last_build_time}}</div>
-                    </div>
-                    <div class="mdui-col mdui-text-center mdui-typo">
-                        <div>Powered by <a href="https://github.com/zcmimi/py-blog">py-blog</a></div>
-                        <div>Theme material</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</footer>
-{%if t_config.search.typ=='local'%}
-<div class="mdui-dialog" id="search_dialog">
-    <div class="mdui-dialog-title">Search</div>
-    <div class="mdui-dialog-content">
-        <div class="mdui-textfield">
-            <i class="mdui-icon material-icons">search</i>
-            <input id="search_input" class="mdui-textfield-input" placeholder="搜索" onchange="search('{{t_config.search.file}}')">
-        </div>
-        <div id="search_result" class="mdui-list"></div>
-    </div>
-</div>
+{%if t_config.footer.enable%}
+    {% include "footer.html" %}
 {%endif%}
-<div class="mdui-drawer mdui-drawer-close mdui-drawer-full-height mdui-shadow-2" id="drawer">
-    <ul class="mdui-list">
-        <div class="mdui-list-item mdui-ripple">
-            <i class="mdui-list-item-icon mdui-icon material-icons mdui-text mdui-text-color-black">home</i>
-            <a href="{{config.site_rt}}/" class="mdui-list-item-content">{{config.site_name}}</a>
-        </div>
-        <a href="{{config.site_rt}}/about"><center><img src="{{t_config.avatar}}" width="95%" height="95%"></img></center></a>
-        {%for i in t_config.drawer%}
-            <li class='mdui-subheader'>{{i}}</li>
-            {%for j in t_config.drawer[i]%}
-                <li class="mdui-list-item mdui-ripple">
-                    {%if j.icon.typ=='mdui'%}
-                    <i class="mdui-list-item-icon mdui-icon material-icons" {{"style='color:%s'"%j.icon.color if j.icon.color}}">{{j.icon.data}}</i>
-                    {%elif j.icon.typ=='mqii'%}
-                    <i class="mdui-list-item-icon mdui-icon mqii mqii-{{j.icon.data}}" {{"style='color:%s'"%j.icon.color if j.icon.color}}"></i>
-                    {%else%}
-                    <img class="mdui-list-item-icon" src="{{j.icon}}">
-                    {%endif%}
-                    <a href="{{j.url}}" class="mdui-list-item-content">{{j.content}}</a>
-                </li>
-            {%endfor%}
-        {%endfor%}
-    </ul>
-</div>
+{% include "search.html" %}
 
-{%if t_config.autopjax%}
-<script>pjax_on(-1);</script>
-{%endif%}
+{% include "js.html" %}
 
-{%if t_config.music%}
-<div id='musiclist'></div>
-<style>.aplayer,.aplayer-body,.aplayer-pic,.aplayer-button{z-index: 9999999 !important;}</style>
-<script>
-function music_on(){ 
-    pjax_on(1);
-    var x=document.getElementById('musiclist');
-    x.innerHTML="";
-    mdui.snackbar({message:'歌单加载中,请稍等2-10s'});
-    var hl=document.createElement('link');
-    hl.href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css";
-    hl.type='text/css';
-    hl.rel='stylesheet';
-    x.appendChild(hl);
-    hl=document.createElement('script');
-    hl.src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js";
-    x.appendChild(hl);
-    hl=document.createElement('script');
-    hl.src="https://cdn.jsdelivr.net/npm/meting/dist/Meting.min.js";
-    x.appendChild(hl);
-
-    hl=document.createElement('meting-js');
-    hl.setAttribute('id','{{t_config.music.id}}');
-    hl.setAttribute('fixed','true');
-    hl.setAttribute('server','{{t_config.music.server}}');
-    hl.setAttribute('type','playlist');
-    hl.setAttribute('order','{{t_config.music.order}}');
-    hl.setAttribute('theme','{{t_config.music.color}}');
-    x.appendChild(hl);
+{%if t_config.pjax%}
+<script async>
+var pjaxjs=document.createElement("script");
+pjaxjs.src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js";
+pjaxjs.async=true;
+pjaxjs.onload=function(){
+    var pjax=new Pjax({elements:"a",selectors:[
+        "title",
+        "#TOC",
+        ".mdui-container",
+        ".js-pjax"
+    ]});
+    document.addEventListener('pjax:send',function(){document.getElementById('loading-progress').hidden=0;});
+    document.addEventListener('pjax:complete',function(){document.getElementById('loading-progress').hidden=1;pjax_load();mdui.mutation();});
 }
+document.getElementsByTagName("head")[0].appendChild(pjaxjs);
+</script>
+{%endif%}
+
+{%if t_config.comment.enable%}
+<script async>
+window.addEventListener('load',function(){try{GenComment();}catch{}});
+document.addEventListener('pjax:complete',function(){try{GenComment();}catch{}});
 </script>
 {%endif%}
 

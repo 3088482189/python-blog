@@ -7,7 +7,7 @@ links:
     - name: zcmimi # 名称
       url: https://blog.zcmimi.top # 指向地址
       avatar: https://cdn.jsdelivr.net/gh/zcmimi/cdn@master/img/avatar_2.webp # 头像
-      content: noob # 描述
+      content: archlinuxer # 描述
       bg-color: "#ffe9f0"
     # 下面以此类推
 

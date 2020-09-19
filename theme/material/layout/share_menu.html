@@ -1,30 +1,30 @@
-<button class="mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: '分享'}" mdui-menu="{target:'#share_menu',align:'right',covered: false}">
+<button class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '分享'}" mdui-menu="{target:'#share_menu',align:'right',covered: false}">
     <i class="mdui-icon material-icons">share</i>
 </button>
 <ul class="mdui-menu" id="share_menu" style="width: fit-content;">
     {%if t_config.share_menu.weibo%}
-    <li class="mdui-menu-item mdui-ripple">
-        <a id="share_weibo" href="http://service.weibo.com/share/share.php?appkey=&title={{title}}&url={{config.site_url}}{{addr}}&pic={{config.site_icon}}&searchPic=false&style=simple" target="_blank" class="mdui-ripple">
+    <li class="mdui-menu-item">
+        <a id="share_weibo" href="https://service.weibo.com/share/share.php?appkey=&title={{Title}}&url={{config.site_url}}{{addr}}&pic={{config.site_icon}}&searchPic=false&style=simple" target="_blank" rel="noopener">
             <i class="mdui-menu-item-icon mdui-icon mqii mqii-weibo"></i>分享到微博
         </a>
     </li>
     {%endif%}
     {%if t_config.share_menu.qq%}
-    <li class="mdui-menu-item mdui-ripple">
-        <a id="share_qq" href="http://connect.qq.com/widget/shareqq/index.html?site={{site_name}}&title={{title}}&summary=&pics=_avatar_&url={{config.site_url}}{{addr}}" target="_blank" class="mdui-ripple">
+    <li class="mdui-menu-item">
+        <a id="share_qq" href="https://connect.qq.com/widget/shareqq/index.html?site={{config.site_name}}&title={{Title}}&summary=&pics={{config.site_icon}}&url={{config.site_url}}{{addr}}" target="_blank" rel="noopener">
             <i class="mdui-menu-item-icon mdui-icon mqii mqii-qq_filled"></i>分享到QQ
         </a>
     </li>
     {%endif%}
     {%if t_config.share_menu.twitter%}
-    <li class="mdui-menu-item mdui-ripple">
-        <a id="share_twitter" href="https://twitter.com/intent/tweet?text={{title}}&url={{config.site_url}}{{addr}}&via={{author if author else config.author}}" target="_blank" class="mdui-ripple">
+    <li class="mdui-menu-item">
+        <a id="share_twitter" href="https://twitter.com/intent/tweet?text={{Title}}&url={{config.site_url}}{{addr}}" target="_blank" rel="noopener">
             <i class="mdui-menu-item-icon mdui-icon mqii mqii-twitter"></i>分享到Twitter
         </a>
     </li>
     {%endif%}
-    <li class="mdui-menu-item mdui-ripple">
-        <a id="share_copy" href="javascript:copylink();" class="mdui-ripple">
+    <li class="mdui-menu-item">
+        <a id="share_copy" onclick="copylink()">
             <i class="mdui-menu-item-icon mdui-icon material-icons">link</i>复制链接
         </a>
     </li>

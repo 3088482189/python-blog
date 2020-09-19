@@ -1,30 +1,23 @@
-copy:
-  - assets
-
-markdown: True
-
 layout:
   post: post.html
   page: page.html
   index: index.html
+  tags_index: tags_index.html
+  categories_index: categories_index.html
+  
+  tags_cloud: tags_cloud.html
   links: links.html
-  tag_index: tag_index.html
-  tag_cloud: tag_cloud.html
-  categories: categories.html
+  "404": 404.html
 
 defaut_front:
-  top: 0
   comment: True
-
-default_render:
-  posts: True
-  pages: True
-  index: True
-  tags: True
-  categories: True
 
 extra_render:
 - 
-  layout: tag_cloud
-  path: /tags
-  title: tagcloud
+  layout: tags_cloud
+  addr: tags/
+  title: 标签云
+-
+  layout: "404"
+  addr: 404.html
+  title: 404 Page Not found

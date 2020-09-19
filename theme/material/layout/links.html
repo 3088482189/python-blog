@@ -1,34 +1,35 @@
 {%set page_typ='article'%}
 {%extends "base.html"%}
 {%block content%}
-{%for i in links%}
+{%for i in links-%}
     <div class='mdui-subheader'>{{i}}</div>
     <div class='links-row mdui-row-xs-2 mdui-row-sm-3 mdui-row-md-4 mdui-row-lg-6'>
-        {%for j in links[i]%}
+        {%for j in links[i]-%}
             <div class="mdui-col">
                 <a href="{{j.url}}" target="_blank">
                     <div class="mdui-card" style="background-color: {{j['bg-color']}};backdrop-filter:blur(5px);">
                         <div class="mdui-card-media">
-                            <img class="link-img" data-src="{{j.avatar}}" alt="{{j.name}}">
+                            <img class="link-img" data-src="{{j.avatar}}" src='{{assets_rt}}/icon/loading.svg' alt="{{j.name}}">
                         </div>
                         <div class="mdui-card-primary">
-                            <div class="mdui-card-primary-title">{{j.name}}</div>
-                            <div class="mdui-card-primary-subtitle">{{j.content}}</div>
+                            <div class="mdui-card-primary-title mdui-text-truncate" mdui-tooltip="{'content': '{{j.name}}' }">{{j.name}}</div>
+                            <div class="mdui-card-primary-subtitle mdui-text-truncate" mdui-tooltip="{'content': '{{j.content}}' }">{{j.content}}</div>
                         </div>
                     </div>
                 </a><br>
             </div>
-        {%endfor%}
+        {%-endfor%}
     </div>
-{%endfor%}
-<div class="mdui-card-content">
-    {{html}}
-    <textarea id="md_source" hidden>{{content}}</textarea>
-    <div id="md_out" class="markdown-body">
-        <p>文章加载中...</p>
-        <center><div class="mdui-spinner mdui-spinner-colorful"></div></center>
+{%-endfor%}
+
+{%if content%}
+<div class="mdui-card article">
+    <div class="mdui-card-content">
+        {{html}}
+        <div id="md-body" class="md-body">{{content|markdown_math}}</div>
     </div>
 </div>
+{%endif%}
 <script>
 var scrw=document.body.clientWidth;
 if(scrw<400){
@@ -36,7 +37,6 @@ if(scrw<400){
     for(i in list)list[i].classList.remove("mdui-row-xs-2");
 }
 list=document.getElementsByClassName("link-img");
-function max(x,y){return x>y?x:y;}
 for(i in list){
     var x;
     if(list[i].clientWidth>list[i].clientHeight)x=list[i].clientWidth;
@@ -45,9 +45,5 @@ for(i in list){
     list[i].style.height=x.toString()+"px";
 }
 </script>
-<div class="mdui-card" style="margin-top: 50px;">
-    <div class="mdui-card-content">
-        {%include "comment.html"%}
-    </div>
-</div>
+{%include "comment.html"%}
 {%endblock%}

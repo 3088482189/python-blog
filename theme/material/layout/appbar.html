@@ -1,0 +1,29 @@
+<div class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset mdui-color-white">
+    <div class="mdui-toolbar mdui-color-theme">
+        <button class="mdui-btn mdui-btn-icon" onclick="drawer.toggle();" mdui-tooltip="{content: '菜单'}">
+            <i class="mdui-icon material-icons">menu</i>
+        </button>
+        <a href="{{config.site_rt}}" class="mdui-typo-title">{{config.site_name}}</a>
+        <div class="mdui-toolbar-spacer"></div>
+        <div class="mdui-row" id='toolbar-menu'>
+            {%for i in t_config.appbar.pages-%}
+            <a href="{{t_config.appbar.pages[i]}}" target="_blank" class="mdui-col mdui-text-color-black">{{i}}</a>
+            {%-endfor%}
+        </div><script>if(document.body.clientWidth<1078)document.getElementById('toolbar-menu').hidden=1;</script>
+        <button class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '切换主题'}" mdui-menu="{target: '#theme_menu',align: 'right',covered: false}">
+            <i class="mdui-icon material-icons">view_quilt</i>
+        </button>
+        <ul class="mdui-menu" id="theme_menu" style="width: fit-content;">
+            <li class="mdui-menu-item" mdui-tooltip="{content: '回归原本'}"><a onclick="theme('day')">日间模式</a></li>
+            <li class="mdui-menu-item" mdui-tooltip="{content: '晚上要保护眼睛哦'}"><a onclick="theme('night')">夜间模式</a></li>
+            <li class="mdui-menu-item" mdui-tooltip="{content: '满足你的少女心吧'}"><a onclick="theme('pink')">粉红</a></li>
+            <li class="mdui-menu-item" mdui-tooltip="{content: '没什么,就是淡蓝色'}"><a onclick="theme('blue')">粉蓝</a></li>
+        </ul>
+        <button onclick="search_dialog.open();document.getElementById('search_input').focus();" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '搜索'}">
+            <i class="mdui-icon material-icons">search</i>
+        </button>
+        <button id='toc_button' class="mdui-btn mdui-btn-icon" onclick="toc_drawer.toggle();" mdui-tooltip="{content: '目录'}" hidden>
+            <i class="mdui-icon material-icons">format_list_numbered</i>
+        </button>
+    </div>
+</div>

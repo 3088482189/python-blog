@@ -1,0 +1,24 @@
+<div class="mdui-drawer mdui-drawer-close mdui-drawer-full-height" id="drawer">
+    <ul class="mdui-list">
+        <li class="mdui-list-item">
+            <i class="mdui-list-item-icon mdui-icon material-icons mdui-text mdui-text-color-black">home</i>
+            <a href="{{config.site_rt}}/" class="mdui-list-item-content">{{config.site_name}}</a>
+        </li>
+        <li><center><img src="{{t_config.avatar}}" width="95%" height="95%" alt='avatar'></img></center></li>
+        {%for i in t_config.drawer-%}
+            <li class='mdui-subheader'>{{i}}</li>
+            {%for j in t_config.drawer[i]-%}
+                <li class="mdui-list-item">
+                    {%if j.icon.typ=='mdui'%}
+                    <i class="mdui-list-item-icon mdui-icon material-icons" {{"style='color:%s'"%j.icon.color if j.icon.color}}">{{j.icon.data}}</i>
+                    {%elif j.icon.typ=='mqii'%}
+                    <i class="mdui-list-item-icon mdui-icon mqii mqii-{{j.icon.data}}" {{"style='color:%s'"%j.icon.color if j.icon.color}}"></i>
+                    {%else%}
+                    <img class="mdui-list-item-icon" src="{{j.icon.data}}" alt>
+                    {%endif%}
+                    <a href="{{j.url}}" target="_blank" class="mdui-list-item-content">{{j.content}}</a>
+                </li>
+            {%-endfor%}
+        {%-endfor%}
+    </ul>
+</div>

@@ -1,15 +1,74 @@
 {%if t_config.comment.enable%}
-<div id="vcomments" hidden>
-{
-    "placeholder":"{{t_config.comment.valine_placeholder}}",
-    "appid":"{{t_config.comment.valine_appid}}",
-    "appkey":"{{t_config.comment.valine_appkey}}"
+<div class="mdui-card" style="margin-top: 50px;">
+    <div class="mdui-card-primary">
+        <div class="mdui-card-primary-title">
+            <i class="mdui-icon material-icons">comment</i>
+            评论
+        </div>
+    </div>
+    <div class="mdui-card-content" id='comments'>
+        <center><div class="mdui-spinner"></div></center>
+    </div>
+</div>
+{%if t_config.comment.valine.enable%}
+<script>
+function SetComment(){
+    window.comment=new Valine({
+        el: '#comments',
+        placeholder: "{{t_config.comment.valine.placeholder}}",
+        appId: "{{t_config.comment.valine.appid}}",
+        appKey: "{{t_config.comment.valine.appkey}}",
+        path: window.location.pathname,
+    });
 }
-</div>
-<div id="comments">
-    <p>评论加载中...</p>
-    <center>
-        <div class='mdui-spinner mdui-spinner-colorful'></div>
-    </center>
-</div>
+function GenComment(){
+    document.getElementById('comments').innerHTML=`<center><div class="mdui-spinner mdui-spinner-colorful"></div></center>`;
+    mdui.mutation(document.getElementById('comments'));
+
+    if(document.getElementById("comment_js"))SetComment();
+    else{
+        var valinejs=document.createElement('script');
+        valinejs.id="comment_js";
+        valinejs.src="https://cdn.jsdelivr.net/gh/xCss/Valine/dist/Valine.min.js";
+        valinejs.async=true;
+        valinejs.onload=SetComment;
+    }
+    document.getElementsByTagName("head")[0].appendChild(valinejs);
+}
+</script>
+{%elif t_config.comment.gitalk.enable%}
+<script>
+function SetComment(){
+    window.comment=new Gitalk({
+        clientID:'{{t_config.comment.gitalk.clientID}}',
+        clientSecret:'{{t_config.comment.gitalk.clientSecret}}',
+        repo:'{{t_config.comment.gitalk.repo}}',
+        owner:'{{t_config.comment.gitalk.owner}}',
+        admin: "{{t_config.comment.gitalk.admin}}",
+        id:location.pathname,
+        distractionFreeMode:{{t_config.comment.gitalk.distractionFreeMode}}
+    });
+    window.gitalk.render('comments');
+}
+function GenComment(){
+    document.getElementById('comments').innerHTML=`<center><div class="mdui-spinner mdui-spinner-colorful"></div></center>`;
+    mdui.mutation(document.getElementById('comments'));
+    
+    if(document.getElementById("comment_js"))SetComment();
+    else{
+        var gtalkjs=document.createElement('script');
+        gtalkjs.id="comment_js";
+        gtalkjs.src="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js";
+        gtalkjs.async=true;
+        gtalkjs.onload=SetComment;
+        var gtalkcss=document.createElement('link');
+        gtalkcss.id="comment_css";
+        gtalkcss.href="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.css";
+        gtalkcss.type='text/css';
+        gtalkcss.rel='stylesheet';
+        document.getElementsByTagName("head")[0].append(gtalkjs,gtalkcss);
+    }
+}
+</script>
+{%endif%}
 {%else%}评论未开放{%endif%}

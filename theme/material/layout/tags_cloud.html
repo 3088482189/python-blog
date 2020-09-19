@@ -1,0 +1,33 @@
+{%set page_typ='index'%}
+{%extends "base.html"%}
+{%block content%}
+<div class="mdui-textfield" style="padding-top: 50px;padding-bottom: 50px;">
+    <i class="mdui-icon material-icons" style="padding-bottom: 50px;">filter_list</i>
+    <input id="tag_filter" class="mdui-textfield-input" placeholder="筛选" onchange="filter()">
+</div>
+<script>
+function filter(){
+    var list=document.getElementById('tag_list').children,
+        text=document.getElementById('tag_filter').value.toLowerCase();
+    for(var i in list){
+        var x=list[i];
+        if(x.children[0].children[0].children[0].children[0].innerHTML.toLowerCase().indexOf(text)!=-1)x.hidden=0;
+        else x.hidden=1;
+    }
+}
+</script>
+<div id='tag_list' class="mdui-row-xs-1 mdui-row-sm-2 mdui-row-md-4 mdui-row-lg-5" style="word-wrap:break-word;word-break:break-all;">
+{%for i in data.tags|sort-%}
+    <div class="mdui-col">
+        <a href="/tags/{{i}}/">
+            <div class="mdui-card">
+                <div class="mdui-card-primary">
+                    <div class="mdui-card-primary-title">{{i}}</div>
+                    <div class="mdui-card-primary-subtitle">共{{data.tags[i]|length}}篇文章</div>
+                </div>
+            </div>
+        </a><br>
+    </div>
+{%-endfor%}
+</div>
+{%endblock%}

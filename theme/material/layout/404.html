@@ -1,0 +1,15 @@
+{%set page_typ='index'%}
+{%extends "base.html"%}
+{%block content%}
+
+<div class="mdui-card" style="position:absolute;width:50%;height:fit-content;top:0;bottom:0;left:0;right:0;margin:auto;">
+    <div class="mdui-card-primary">
+        <div class="mdui-card-primary-title">您所访问的页面不存在</div>
+        <div class="mdui-card-primary-subtitle">404 Page Not Found</div>
+    </div>
+    <div class="mdui-card-actions">
+        <a href="{{config.site_rt}}/" class="mdui-btn mdui-float-right">回到首页</a>
+        <a href="javascript:window.history.back();" class="mdui-btn mdui-float-right">返回上一页</a>
+    </div>
+  </div>
+{%endblock%}
