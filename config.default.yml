@@ -1,24 +1,24 @@
 dest: web # 生成文件目录
-site_url: /
-site_name: py-blog
-site_icon: 
-lang: zh-CN
-author: zcmimi
-theme: material
-article_address: origin # (number|pinyin|origin)
+site_url: / # 博客网址
+site_name: py-blog # 站点名称
+site_icon: # 站点图标
+lang: zh-CN # 站点语言
+author: zcmimi # 作者
+theme: material # 博客主题
+article_address: origin # number|pinyin|origin (文章命名方式)
 
 # index
-page_articles: 10
-preview_len: 150
+page_articles: 10 # 索引每页文章数量
+preview_len: 150 # 文章预览(摘要)自动截取字数
 
-rss: atom # atom|rss
-sitemap: True
+rss: atom # atom|rss|False (atom规范/rss规范/不生成rss)
+sitemap: True # 是否生成站点地图
 
-baidu_push: 
-  enable: False
-  url: http://data.zz.baidu.com/urls?site=https://blog.zcmimi.top&token=**************** #百度推送接口调用地址
+baidu_push: # 百度推送
+  enable: False # 开启/关闭
+  url: http://data.zz.baidu.com/urls?site=https://blog.zcmimi.top&token=**************** #接口地址
 
-repo: 
+repo: # 一键部署git仓库地址
   - git@e.coding.net:zcmimi/blog.git
   - git@github.com:zcmimi/zcmimi.github.io.git
 

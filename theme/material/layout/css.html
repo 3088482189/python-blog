@@ -4,6 +4,6 @@
 <link rel="stylesheet" href="/custom.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/{{t_config.highlight.theme}}.min.css">
 <link rel="stylesheet" href="{{assets_rt}}/markdown.min.css">
-{%if config.math%}
+{%if t_config.all_math or math%}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
 {%endif%}

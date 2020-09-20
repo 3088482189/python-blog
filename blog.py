@@ -115,7 +115,8 @@ def gen_categories_index(path,cates):
     elif 'sub' in cates:
         categories_index.append({'addr':path,'link':rt+path,'path':path,'title':path,'sub':cates['sub'],'layout':'categories_index'})
 def generate():
-    global posts,pages,index,tags_index
+    global posts,pages,tags,categories,index,tags_index,categories_index
+    tags,categories={},{}
     for x in posts+pages:
         for tag in x['tags']:
             if tag in tags:tags[tag].append(x)
@@ -129,6 +130,7 @@ def generate():
             if 'nodes' not in now:now.update({'nodes':[x]})
             else: now['nodes'].append(x)
     index=gen_index('',posts,{'layout': 'index'})
+    tags_index,categories_index=[],[]
     for tag in tags:tags_index.extend(gen_index('tags/%s/'%tag,tags[tag],{'tag':tag,'layout':'tags_index'}))
     gen_categories_index('categories/',categories)
 def CpAssets():
@@ -176,9 +178,6 @@ rt=config['site_rt']=urlparse(config['site_url']).path
 if config['article_address']=='pinyin':import pypinyin
 t_config=yaml.load(open('theme/%s/config.yml'%config['theme'],encoding='utf-8').read(),Loader=yamloader)
 t_setting=yaml.load(open('theme/%s/setting.yml'%config['theme'],encoding='utf-8').read(),Loader=yamloader)
-posts,pages=[],[]
-tags,categories={},{}
-index,tags_index,categories_index=[],[],[]
 urls=[]
 env,tpls=False,{}
 last_build_time=datetime.now().isoformat()
@@ -204,10 +203,9 @@ def init_env():
         'config':config,
         't_config':t_config,
         'data':{
-            'posts':posts,
-            'pages':pages,
-            'tags':tags,
-            'categories':categories
+            'posts':posts,'pages':pages,
+            'tags':tags,'categories':categories,
+            'index':index,'tags_index':tags_index,'categories_index':categories_index
         },
         'last_build_time': last_build_time
     })
@@ -237,11 +235,11 @@ def calcTime(opt,f):
     f(),print('%s in %.3fs'%(opt,time.time()-st_time))
 def main():
     if not Dest.exists():Dest.mkdir()
-    calcTime("read",read_all)
-    calcTime("sort",sort_posts)
-    calcTime("generate",generate)
-    calcTime("copy assets",CpAssets)
-    calcTime("render",render)
+    calcTime('read',read_all)
+    calcTime('sort',sort_posts)
+    calcTime('generate',generate)
+    calcTime('copy assets',CpAssets)
+    calcTime('render',render)
     if config['baidu_push']['enable']:baidu_push()
 
 # server ======================================================
@@ -260,7 +258,7 @@ def set_interval(f,s):
     return t
 def response(client,addr):
     req_data=client.recv(4096).decode()
-    data=req_data.split(" ")
+    data=req_data.split(' ')
     method=data[0]
     url=unquote(data[1],'utf-8')
     path=urlparse(url).path
@@ -302,17 +300,18 @@ def response(client,addr):
             if (x['assets']/now).is_file():
                 res_body=rd(str(x['assets']/now))
 
-    client.send((res_line+res_header+"\r\n").encode()+res_body)
+    client.send((res_line+res_header+'\r\n').encode()+res_body)
     client.close()
 def serve():
     port=config['server']['port']
-    print('Serving on http://localhost:%d'%port)
+    upd()
     init_env()
     watch=set_interval(upd,config['server']['watch_interval'])
     svr=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
     svr.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,True)
     svr.bind(('',port))
     svr.listen(128)
+    print('Serving on http://localhost:%d'%port)
     while True:
         client,addr=svr.accept()
         t=threading.Thread(target=response,args=(client,addr),daemon=True)
@@ -337,7 +336,7 @@ def deploy(force):
     Deploy=Path('deploy')
     ff=not Deploy.exists()
     repo=config['repo']
-    if ff:os.system("git clone %s deploy"%repo[0])
+    if ff:os.system('git clone %s deploy'%repo[0])
     for i in Deploy.iterdir():
         if not i.name.startswith('.git'):shutil.rmtree(i) if i.is_dir() else os.remove(i)
     for i in Dest.iterdir():cp(i,Deploy/i.name)
@@ -359,18 +358,18 @@ def show_help():
 
 if __name__=='__main__':
     cmd=sys.argv[1:] if '.py' in sys.argv[0] else sys.argv
-    if len(cmd)<1 or cmd[0]=="h" or cmd[0]=="help" or cmd[0]=="-h" or cmd[0]=="--help":show_help()
+    if len(cmd)<1 or cmd[0]=='h' or cmd[0]=='help' or cmd[0]=='-h' or cmd[0]=='--help':show_help()
     elif cmd[0][0]=='g':main()
     elif cmd[0][0:2]=='cl':
         if Dest.exists():shutil.rmtree(Dest)
-    elif cmd[0][0]=="s":serve()
-    elif(cmd[0]=="n" or cmd[0]=="new"):new_post({
+    elif cmd[0][0]=='s':serve()
+    elif(cmd[0]=='n' or cmd[0]=='new'):new_post({
         'title':' '.join(cmd[1:]),
         'date':time.strftime('%Y-%m-%d %H:%M:%S',time.localtime())
     })
-    elif(cmd[0]=="np" or cmd[0]=="newpage"):new_page({
+    elif(cmd[0]=='np' or cmd[0]=='newpage'):new_page({
         'title':' '.join(cmd[1:]),
         'date':time.strftime('%Y-%m-%d %H:%M:%S',time.localtime())
     })
-    elif cmd[0][0]=="d":deploy(len(cmd)>2 and cmd[1]=='-f')
+    elif cmd[0][0]=='d':deploy(len(cmd)>2 and cmd[1]=='-f')
     else:show_help()

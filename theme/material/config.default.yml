@@ -176,3 +176,5 @@ busuanzi:
 
 highlight:
   theme: github
+
+# all_math: True 全站开启数学支持

@@ -1,5 +1,5 @@
 avatar: https://cdn.jsdelivr.net/gh/zcmimi/cdn@master/img/avatar_2.webp
-assets_rt: # https://cdn.jsdelivr.net/gh/zcmimi/cdn@master/material/assets
+assets_rt: https://cdn.jsdelivr.net/gh/zcmimi/cdn@master/material/assets
   # 如果有cdn提高assets文件夹的加载速度,请填入地址
   # 否则留空
 theme: clean # (beauty|clean)
@@ -27,7 +27,7 @@ comment:
     admin: zcmimi
     distractionFreeMode: 'false'
 
-pjax: False # enable pjax
+pjax: True # enable pjax
 
 appbar:
   pages:
@@ -35,20 +35,21 @@ appbar:
     分类: /categories/
     友链: /links/
     工具集: /tools/
-    关于: /about/
+    关于我: /about/
+    Traveling: https://travellings.now.sh/
 
 head_card:
   enable: True
   img: https://cdn.jsdelivr.net/gh/zcmimi/cdn@master/img/1.webp
   logo: https://cdn.jsdelivr.net/gh/zcmimi/cdn@master/img/avatar_2.webp
-  text: material theme for py-blog
-  introduction: a theme with material-design
+  text: nya~
+  introduction: oier & archlinuxer
   pages:
     标签云: /tags/
     分类: /categories/
     友链: /links/
     工具集: /tools/
-    关于: /about/
+    关于我: /about/
 
 footer:
   enable: True
@@ -56,9 +57,9 @@ footer:
   site_till_date: 2020
   icons:
     github: https://github.com/zcmimi/
-    bilibili: https://space.bilibili.com/
-    zhihu: https://www.zhihu.com/
-    twitter: https://twitter.com/zc_mimi
+    bilibili: https://space.bilibili.com/110897068/
+    zhihu: https://www.zhihu.com/people/zcmimi/
+    twitter: https://twitter.com/zc_mimi/
   lastbuild: True
 
 drawer:
@@ -87,7 +88,7 @@ drawer:
       typ: mdui
       data: build
       color: black
-  - content: 关于
+  - content: 关于我
     url: /about/
     icon:
       typ: mdui
@@ -105,9 +106,15 @@ drawer:
       typ: mdui
       data: list
       color: black
+  - content: 评论管理
+    url: https://nlh0fhlrsgij.leanapp.cn/
+    icon:
+      typ: mdui
+      data: comment
+      color: black
   Catch me:
   - content: 给我写信
-    url: mailto:zcmimi@outlook.com
+    url: http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=fwUcIBIWEhY-Dg5RHBAS
     icon:
       typ: mdui
       data: email
@@ -125,7 +132,7 @@ drawer:
       data: twitter
       color: rgba(29,161,242,1.00)
   - content: 哔哩哔哩
-    url: https://space.bilibili.com/
+    url: https://space.bilibili.com/110897068/
     icon:
       typ: mqii
       data: bilibili
@@ -137,11 +144,16 @@ drawer:
       data: netease-cloud-music
       color: red
   - content: 知乎
-    url: https://www.zhihu.com/
+    url: https://www.zhihu.com/people/zcmimi/
     icon:
       typ: mqii
       data: zhihu
       color: '#0084ff'
+  - content: 洛谷
+    url: https://luogu.com.cn/user/36532/
+    icon:
+      typ: img
+      data: https://www.luogu.com.cn/favicon.ico
 
   - content: Github
     url: https://github.com/zcmimi/
@@ -162,7 +174,7 @@ drawer:
       data: telegram
       color: '#bbb'
 search:
-  typ: local #(local|worker|)
+  typ: worker #(local|worker|algolia[todo]|)
   file: /pure_data.json
   api: https://blog-search.zcmimi.top/
 
@@ -172,7 +184,9 @@ share_menu:
   qq: True
 
 busuanzi: 
-  enable: False
+  enable: true
 
 highlight:
   theme: github
+
+all_math: True

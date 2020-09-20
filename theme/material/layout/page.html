@@ -46,7 +46,7 @@
         {{html}}
         
         {%if password%}
-        <div id="md-body" class="md-body" hidden>{{content|markdown_math|encrypt(password)}}</div>
+        <div id="md-body" class="md-body" hidden>{{md(content)|encrypt(password)}}</div>
         <div class="mdui-textfield mdui-textfield-floating-label">
             <label class="mdui-textfield-label">请输入密码:</label>
             <input class="mdui-textfield-input" type="password" id="passwd">
@@ -67,7 +67,7 @@ passwd.oninput=function(){
 }
 </script>
         {%else%}
-        <div id="md-body" class="md-body">{{content|markdown_math}}</div>
+        <div id="md-body" class="md-body">{{md(content)}}</div>
         {%endif%}
     </div>
 </div>
