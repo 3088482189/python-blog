@@ -1,5 +1,5 @@
 avatar: https://cdn.jsdelivr.net/gh/zcmimi/cdn@master/img/avatar_2.webp
-assets_rt: https://cdn.jsdelivr.net/gh/zcmimi/cdn@master/material/assets
+assets_rt: # https://cdn.jsdelivr.net/gh/zcmimi/cdn@master/material/assets
   # 如果有cdn提高assets文件夹的加载速度,请填入地址
   # 否则留空
 theme: clean # (beauty|clean)
@@ -15,19 +15,19 @@ comment:
   enable: True
   valine:
     enable: True
-    appid: NLh0fhLRvD8gOWEC3vtOIRx5-gzGzoHsz 
-    appkey: DSwqdjPFKAnO4CFMQypfkcB9
+    appid: NLh0fhLRv**********OIRx5-gzGzoHsz 
+    appkey: DSwqdjPF**********pfkcB9
     placeholder: 说几句嘛qwq
   gitalk:
-    enable: True
-    clientID: 054902ee1548e6fe427e
-    clientSecret: b31fac2b407311ca7e6673ab84727ae9562c69ba
+    enable: False
+    clientID: 05490***********e427e
+    clientSecret: b***********11ca7e6673ab84727ae9562c69ba
     repo: zcmimi.github.io
     owner: zcmimi
     admin: zcmimi
     distractionFreeMode: 'false'
 
-pjax: True # enable pjax
+pjax: False # enable pjax
 
 appbar:
   pages:
@@ -35,21 +35,20 @@ appbar:
     分类: /categories/
     友链: /links/
     工具集: /tools/
-    关于我: /about/
-    Traveling: https://travellings.now.sh/
+    关于: /about/
 
 head_card:
   enable: True
   img: https://cdn.jsdelivr.net/gh/zcmimi/cdn@master/img/1.webp
   logo: https://cdn.jsdelivr.net/gh/zcmimi/cdn@master/img/avatar_2.webp
-  text: nya~
-  introduction: oier & archlinuxer
+  text: material theme for py-blog
+  introduction: a theme with material-design
   pages:
     标签云: /tags/
     分类: /categories/
     友链: /links/
     工具集: /tools/
-    关于我: /about/
+    关于: /about/
 
 footer:
   enable: True
@@ -57,9 +56,9 @@ footer:
   site_till_date: 2020
   icons:
     github: https://github.com/zcmimi/
-    bilibili: https://space.bilibili.com/110897068/
-    zhihu: https://www.zhihu.com/people/zcmimi/
-    twitter: https://twitter.com/zc_mimi/
+    bilibili: https://space.bilibili.com/
+    zhihu: https://www.zhihu.com/
+    twitter: https://twitter.com/zc_mimi
   lastbuild: True
 
 drawer:
@@ -88,7 +87,7 @@ drawer:
       typ: mdui
       data: build
       color: black
-  - content: 关于我
+  - content: 关于
     url: /about/
     icon:
       typ: mdui
@@ -106,15 +105,9 @@ drawer:
       typ: mdui
       data: list
       color: black
-  - content: 评论管理
-    url: https://nlh0fhlrsgij.leanapp.cn/
-    icon:
-      typ: mdui
-      data: comment
-      color: black
   Catch me:
   - content: 给我写信
-    url: http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=fwUcIBIWEhY-Dg5RHBAS
+    url: mailto:zcmimi@outlook.com
     icon:
       typ: mdui
       data: email
@@ -132,7 +125,7 @@ drawer:
       data: twitter
       color: rgba(29,161,242,1.00)
   - content: 哔哩哔哩
-    url: https://space.bilibili.com/110897068/
+    url: https://space.bilibili.com/
     icon:
       typ: mqii
       data: bilibili
@@ -144,16 +137,11 @@ drawer:
       data: netease-cloud-music
       color: red
   - content: 知乎
-    url: https://www.zhihu.com/people/zcmimi/
+    url: https://www.zhihu.com/
     icon:
       typ: mqii
       data: zhihu
       color: '#0084ff'
-  - content: 洛谷
-    url: https://luogu.com.cn/user/36532/
-    icon:
-      typ: img
-      data: https://www.luogu.com.cn/favicon.ico
 
   - content: Github
     url: https://github.com/zcmimi/
@@ -174,7 +162,7 @@ drawer:
       data: telegram
       color: '#bbb'
 search:
-  typ: worker #(local|worker|algolia[todo]|)
+  typ: local #(local|worker|)
   file: /pure_data.json
   api: https://blog-search.zcmimi.top/
 
@@ -184,9 +172,9 @@ share_menu:
   qq: True
 
 busuanzi: 
-  enable: true
+  enable: False
 
 highlight:
   theme: github
 
-all_math: True
+# all_math: True 全站开启数学支持

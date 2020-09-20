@@ -15,13 +15,13 @@ comment:
   enable: True
   valine:
     enable: True
-    appid: NLh0fhLRvD8gOWEC3vtOIRx5-gzGzoHsz 
-    appkey: DSwqdjPFKAnO4CFMQypfkcB9
+    appid: NLh0fhLRv**********OIRx5-gzGzoHsz 
+    appkey: DSwqdjPF**********pfkcB9
     placeholder: 说几句嘛qwq
   gitalk:
-    enable: True
-    clientID: 054902ee1548e6fe427e
-    clientSecret: b31fac2b407311ca7e6673ab84727ae9562c69ba
+    enable: False
+    clientID: 05490***********e427e
+    clientSecret: b***********11ca7e6673ab84727ae9562c69ba
     repo: zcmimi.github.io
     owner: zcmimi
     admin: zcmimi
