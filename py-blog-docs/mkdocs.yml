@@ -1,0 +1,31 @@
+site_name: py-blog 文档
+site_author: zcmimi
+copyright: Copyright &copy; 2019 - 2020 zcmimi
+theme:
+  name: 'material'
+  language: 'zh'
+  feature:
+    - tabs
+    - instant
+  palette:
+    scheme: default
+    primary: blue
+    accent: red
+plugins:
+  - search
+  - minify:
+      minify_html: true
+      minify_js: true
+      htmlmin_opts:
+          remove_comments: true
+nav:
+  - 关于: index.md
+  - 快速开始: 快速开始.md
+  - 自定义配置: 自定义配置.md
+  - 开始写作: 开始写作.md
+  - 资源文件夹: 资源文件夹.md
+  - 部署: 部署.md
+  - 主题: 主题.md
+
+  - 开发主题:
+    - 开发主题: develop_theme/开发主题.md
