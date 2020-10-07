@@ -1,48 +1,90 @@
 ---
-title: test 
-date: 2020-05-31 14:58
-tags: 
- - test
-
-categories:
- - [test]
-
+author: zcmimi
+categories: []
+copyright: true
+date: 2020-03-06 10:17:00
+math: true
+tags:
+- test
+title: test
 top: 0
-password: test
+
 ---
+# 一级标题
 
-## Test
+## 二级标题
 
-test
+### 三级标题
 
-~~test~~
+#### 四级标题
 
-**test**
+[链接](/)
 
-*test*
+**加粗**
 
-$E=mc^2$
+*斜体*
+
+~~删除线~~
+
+<u>下划线</u>
+
+> 引用
+
+表格:
+
+| 表头|表头|
+| - |- |
+|单元格 |单元格|
+|单元格 |单元格|
+
+|左对齐----|--居中对齐--|----右对齐|
+|:-|:-:|-:|
+|单元格|单元格|单元格|
+|单元格|单元格|单元格|
+
+行内公式: $E=mc^2$
+
+行间公式:
 
 $$
 E=mc^2
 $$
 
-| test | test | test |
-| ---- | ---- | ---- |
-| test | test | test |
-| test | test | test |
-| test | test | test |
+`行内代码`
 
-| $E=mc^2$ | $E=mc^2$ | $E=mc^2$ |
-| -------- | -------- | -------- |
-| $E=mc^2$ | $E=mc^2$ | $E=mc^2$ |
-| $E=mc^2$ | $E=mc^2$ | $E=mc^2$ |
-| $E=mc^2$ | $E=mc^2$ | $E=mc^2$ |
+`行内代码,$latex优先级测试$`
 
-https://github.com/py-blog
+代码块:
 
-[py-blog](https://github.com/zcmimi/py-blog)
+```text
+$Q\omega Q$
+$$Q\omega Q$$
+```
 
-> test
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+int main(){
+    cout<<"hello the world"<<endl;
+}
+```
 
-![](test.png)
+```python
+print("hello the world")
+```
+
+```bash
+echo "hello the world"
+```
+
+```javascript
+console.log("hello the world");
+```
+
+```java
+System.out.println("hello the world")
+```
+
+```ruby
+print "hello the world"
+```

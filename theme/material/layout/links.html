@@ -12,7 +12,7 @@
                             <img class="link-img" data-src="{{j.avatar}}" src='{{assets_rt}}/icon/loading.svg' alt="{{j.name}}">
                         </div>
                         <div class="mdui-card-primary">
-                            <div class="mdui-card-primary-title mdui-text-truncate" mdui-tooltip="{'content': '{{j.name}}' }">{{j.name}}</div>
+                            <div class="mdui-card-primary-title mdui-text-truncate mdui-text-color-black" mdui-tooltip="{'content': '{{j.name}}' }">{{j.name}}</div>
                             <div class="mdui-card-primary-subtitle mdui-text-truncate" mdui-tooltip="{'content': '{{j.content}}' }">{{j.content}}</div>
                         </div>
                     </div>
@@ -26,6 +26,7 @@
 <div class="mdui-card article">
     <div class="mdui-card-content">
         {{html}}
+        {%from "macros.html" import md%}
         <div id="md-body" class="md-body">{{md(content)}}</div>
     </div>
 </div>

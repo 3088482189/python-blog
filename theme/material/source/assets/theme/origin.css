@@ -1,14 +1,14 @@
 .mdui-appbar,.mdui-card{box-shadow: 0 1px 6px 0 rgba(32,33,36,.28);}
-.mdui-card-header{background-color: #fff;}
+.mdui-appbar{background-color: #fff;}
 .article{margin-top: 50px;}
-.mdui-card{border-radius: 7px;}
-body{font-family: Monaco,Hack,Ubuntu,"微软雅黑",Consolas !important;font-size: 17px;}
-pre code,pre tt{padding: 8px;font-size: 16px;}
-#toc ul{
-    width: fit-content;
+.mdui-card{border-radius: 6px;}
+body{font-family: "Fira Sans","Helvetica Neue",Helvetica,Arial,sans-serif,Monaco,Hack,Ubuntu,Consolas,"微软雅黑";font-size: 17px;}
+pre code,pre tt{padding:8px;font-size:16px;}
+#toc{
     line-height: 28px;
     font-size: 14px;
     padding-left: 10px;
 }
 a{text-decoration-line: none;color:#0099ff;}
-code{color:#0087ca;}
+.text{color:#000;}
+code{color:#4970ff;font-family: Monaco,Ubuntu mono,Hack,Consolas;}

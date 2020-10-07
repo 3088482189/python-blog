@@ -4,21 +4,21 @@
 <ul class="mdui-menu" id="share_menu" style="width: fit-content;">
     {%if t_config.share_menu.weibo%}
     <li class="mdui-menu-item">
-        <a id="share_weibo" href="https://service.weibo.com/share/share.php?appkey=&title={{Title}}&url={{config.site_url}}{{addr}}&pic={{config.site_icon}}&searchPic=false&style=simple" target="_blank" rel="noopener">
+        <a id="share_weibo" href="https://service.weibo.com/share/share.php?appkey=&title={{Title}}&url={{link}}&pic={{config.site_icon}}&style=simple" target="_blank" rel="noopener">
             <i class="mdui-menu-item-icon mdui-icon mqii mqii-weibo"></i>分享到微博
         </a>
     </li>
     {%endif%}
     {%if t_config.share_menu.qq%}
     <li class="mdui-menu-item">
-        <a id="share_qq" href="https://connect.qq.com/widget/shareqq/index.html?site={{config.site_name}}&title={{Title}}&summary=&pics={{config.site_icon}}&url={{config.site_url}}{{addr}}" target="_blank" rel="noopener">
+        <a id="share_qq" href="https://connect.qq.com/widget/shareqq/index.html?site={{config.site_name}}&title={{Title}}&summary=&pics={{config.site_icon}}&url={{link}}" target="_blank" rel="noopener">
             <i class="mdui-menu-item-icon mdui-icon mqii mqii-qq_filled"></i>分享到QQ
         </a>
     </li>
     {%endif%}
     {%if t_config.share_menu.twitter%}
     <li class="mdui-menu-item">
-        <a id="share_twitter" href="https://twitter.com/intent/tweet?text={{Title}}&url={{config.site_url}}{{addr}}" target="_blank" rel="noopener">
+        <a id="share_twitter" href="https://twitter.com/intent/tweet?text={{Title}}&url={{link}}" target="_blank" rel="noopener">
             <i class="mdui-menu-item-icon mdui-icon mqii mqii-twitter"></i>分享到Twitter
         </a>
     </li>

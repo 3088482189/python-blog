@@ -22,22 +22,22 @@
                 <img data-src="{{t_config.avatar}}" src='{{assets_rt}}/icon/loading.svg' style="margin:auto;position: absolute;top:0;bottom:0;left:0;right:0;" alt>
             </div>
             <div class="mdui-card-menu">
-                <button mdui-menu="{target:'#home_pages_menu',align:'right',covered: false}" mdui-tooltip="{content: '页面'}" class="mdui-btn mdui-btn-icon">
-                    <i class="mdui-icon material-icons">view_carousel</i>
-                </button>
-                <ul id='home_pages_menu' class="mdui-menu" style="width: fit-content;">
-                    {%for i in t_config.head_card.pages-%}
-                    <li class="mdui-menu-item">
-                        <a href="{{config.site_rt}}{{t_config.head_card.pages[i]}}" target="_blank">{{i}}</a>
-                    </li>
-                    {%-endfor%}
-                </ul>
                 {%include 'share_menu.html'%}
             </div>
             <div class="mdui-card-header">
                 <div class="mdui-card-primary-title">{{config.site_name}}</div>
                 <div class="mdui-card-menu">
-                    <button onclick="drawer.toggle()" class="mdui-btn mdui-btn-icon">
+                    <button mdui-menu="{target:'#home_pages_menu',position:'top',align:'right',covered: false}" mdui-tooltip="{content: '页面'}" class="mdui-btn mdui-btn-icon">
+                        <i class="mdui-icon material-icons">view_carousel</i>
+                    </button>
+                    <ul id='home_pages_menu' class="mdui-menu" style="width: fit-content;">
+                        {%for i in t_config.head_card.pages-%}
+                        <li class="mdui-menu-item">
+                            <a href="{{config.site_rt}}{{t_config.head_card.pages[i]}}" target="_blank">{{i}}</a>
+                        </li>
+                        {%-endfor%}
+                    </ul>
+                    <button mdui-drawer="{target:'#drawer'}" class="mdui-btn mdui-btn-icon">
                         <i class="mdui-icon material-icons">more_vert</i>
                     </button>
                 </div>

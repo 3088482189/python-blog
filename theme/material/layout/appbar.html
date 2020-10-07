@@ -1,15 +1,15 @@
-<div class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset mdui-color-white">
+<div class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide">
     <div class="mdui-toolbar mdui-color-theme">
-        <button class="mdui-btn mdui-btn-icon" onclick="drawer.toggle();" mdui-tooltip="{content: '菜单'}">
+        <button class="mdui-btn mdui-btn-icon" mdui-drawer="{target:'#drawer'}" mdui-tooltip="{content: '菜单'}">
             <i class="mdui-icon material-icons">menu</i>
         </button>
         <a href="{{config.site_rt}}" class="mdui-typo-title">{{config.site_name}}</a>
         <div class="mdui-toolbar-spacer"></div>
-        <div class="mdui-row" id='toolbar-menu'>
+        <div class="mdui-row mdui-hidden-sm-down">
             {%for i in t_config.appbar.pages-%}
-            <a href="{{t_config.appbar.pages[i]}}" target="_blank" class="mdui-col mdui-text-color-black">{{i}}</a>
+            <a href="{{t_config.appbar.pages[i]}}" target="_blank" class="mdui-col text">{{i}}</a>
             {%-endfor%}
-        </div><script>if(document.body.clientWidth<1078)document.getElementById('toolbar-menu').hidden=1;</script>
+        </div>
         <button class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '切换主题'}" mdui-menu="{target: '#theme_menu',align: 'right',covered: false}">
             <i class="mdui-icon material-icons">view_quilt</i>
         </button>
@@ -22,7 +22,7 @@
         <button onclick="search_dialog.open();document.getElementById('search_input').focus();" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '搜索'}">
             <i class="mdui-icon material-icons">search</i>
         </button>
-        <button id='toc_button' class="mdui-btn mdui-btn-icon" onclick="toc_drawer.toggle();" mdui-tooltip="{content: '目录'}" hidden>
+        <button id='toc_button' class="mdui-btn mdui-btn-icon" mdui-drawer="{target:'#toc_drawer'}" mdui-tooltip="{content: '目录'}" hidden>
             <i class="mdui-icon material-icons">format_list_numbered</i>
         </button>
     </div>

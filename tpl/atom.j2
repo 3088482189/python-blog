@@ -11,7 +11,7 @@
 <entry>
     <title>{{i.title}}</title>
     <link href="{{i.link}}"/>
-    <updated>{{i.date}}</updated>
+    <updated>{{i.date.strftime('%Y-%m-%d')}}</updated>
     <summary type="html">{{i.preview|markdown}}</summary>
 </entry>
 {%-endfor%}

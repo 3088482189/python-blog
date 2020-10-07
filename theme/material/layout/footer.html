@@ -8,20 +8,17 @@
                             {%for i in t_config.footer.icons-%}
                                 <div class="mdui-col-xs-2 mdui-col-sm-1 mdui-col-md-1" style="margin: 10px;">
                                     <a href="{{t_config.footer.icons[i]}}">
-                                        <i class="mdui-icon mqii mqii-{{i}} mdui-text-color-black"></i>
+                                        <i class="mdui-icon mqii mqii-{{i}}"></i>
                                     </a>
                                 </div>
                             {%-endfor%}
                         </div>
                     </div>
                     <div class="mdui-col mdui-text-center">
-                        <div>Copyright ©&nbsp;{{t_config.footer.site_create_date}}-{{t_config.footer.site_till_date}}&nbsp;{{config.site_name}}</div>
+                        <span>Copyright ©&nbsp;{{t_config.footer.site_create_date}}-{{t_config.footer.site_till_date}}&nbsp;{{config.site_name}}</span>
                         {%if t_config.busuanzi.enable%}
                         <div><span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span></div>
-                        <script async src="{{assets_rt}}/busuanzi.js" onload="
-                            window.addEventListener('load',busuanzi);
-                            document.addEventListener('pjax:complete',busuanzi);
-                        "></script>
+                        <script async src="{{assets_rt}}/busuanzi.js" onload="window.addEventListener('load',busuanzi);document.addEventListener('pjax:complete',busuanzi);"></script>
                         {%endif%}
 
                         {%if t_config.footer.lastbuild%}

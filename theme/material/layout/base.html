@@ -1,38 +1,6 @@
-{%macro gen_tags(tags,with_number=0)%}
-{%for tag in tags-%}
-<a href="{{config.site_rt}}tags/{{tag}}/" class="mdui-chip mdui-text-color-black">
-    <span class="mdui-chip-title">{{tag}}</span>
-    {%if number%}<div class='mdui-chip-icon'>{{len(tag)}}</div>{%endif%}
-</a>
-{%-endfor%}
-{%endmacro%}
-{%macro gen_categories(categories)%}
-{%for j in categories-%}
-<li class="mdui-menu-item">
-    <a href="{{config.site_rt}}categories/{{j|join('/')}}/">{{j|join('/')}}</a>
-</li>
-{%-endfor%}
-{%endmacro%}
-
-{%macro md(text,math)%}
-{%if math or t_config.all_math%}{{text|markdown_math}}{%else%}{{text|markdown}}{%endif%}
-{%endmacro%}
-
-{%macro mg(x,y)%}
-    {{x if x else y}}
-{%endmacro%}
-
-{%macro randimg()%}
-    {%if t_config.randomimg.type=='folder'%}
-        {{t_config.randomimg.path+range(0,t_config.randomimg.cnt)|random|string+'.'+t_config.randomimg.suf}}
-    {%else%}
-        {{t_config.randomimg.list|random}}
-    {%endif%}
-{%endmacro%}
-
 {%set assets_rt= t_config.assets_rt if t_config.assets_rt else '/assets'%}
 {%set Title=(title+' - ' if title else '') + config.site_name%}
-
+{% include 'macros.html' %}
 <!DOCTYPE html>
 <html lang="{{config.lang}}">
 <head>
@@ -53,20 +21,15 @@
         {%block content%}{%endblock%}
     </div>
     {% include "drawer.html" %}
-    <div class="mdui-drawer mdui-drawer-close mdui-drawer-full-height mdui-drawer-right" id="toc_drawer" hidden>
+    <div class="mdui-drawer mdui-drawer-close mdui-drawer-right" id="toc_drawer" hidden>
         <ul class="mdui-list" id="toc"></ul>
     </div>
 </body>
-<!--top-->
 <button class="mdui-fab mdui-fab-mini mdui-fab-fixed mdui-fab-hide" id="totop" onclick="totop()" style="z-index: 99999;">
     <i class="mdui-icon material-icons">keyboard_arrow_up</i>
 </button>
-<!--top end-->
-{%if t_config.footer.enable%}
-    {% include "footer.html" %}
-{%endif%}
+{%if t_config.footer.enable%}{% include "footer.html" %}{%endif%}
 {% include "search.html" %}
-
 {% include "js.html" %}
 
 {%if t_config.pjax%}

@@ -4,24 +4,28 @@
 import os,sys,time,shutil,re,json,math,socket,threading
 from datetime import datetime
 from pathlib import Path
-from urllib.parse import urlparse,unquote
+from urllib.parse import urlparse,unquote,quote
 from multiprocessing import Process
 import cmd,mistune,md_math
 
-def install_dependencies():
-    print('未安装依赖,正在安装')
-    requirements=['pyyaml','jinja2','pycryptodome','pypinyin','requests']
-    os.system('pip3 install %s -i https://pypi.tuna.tsinghua.edu.cn/simple'%' '.join(requirements))
-try:
-    import yaml,pypinyin,requests
-    from jinja2 import Environment,FileSystemLoader,Template
-    from encrypt import encrypt
-except:
-    install_dependencies()
-    import yaml,pypinyin,requests
-    from jinja2 import Environment,FileSystemLoader,Template
-    from encrypt import encrypt
+install=lambda *args:os.system('pip3 install %s -i https://pypi.tuna.tsinghua.edu.cn/simple'%' '.join(args))
+try:import yaml;from jinja2 import Environment,FileSystemLoader,Template;from encrypt import encrypt
+except:install('pyyaml','jinja2','pycryptodome');import yaml;from jinja2 import Environment,FileSystemLoader,Template
 
+lyml=lambda s:yaml.load(s,Loader=yaml.CLoader if yaml.CLoader else yaml.SafeLoader)
+dyml=lambda x:yaml.dump(x,allow_unicode=True)
+def cp(src,dst):
+    if DEBUG:print('copy',src,dst)
+    if src.is_dir():
+        if dst.exists():shutil.rmtree(dst)
+        shutil.copytree(src,dst)
+    else:shutil.copyfile(src,dst)
+def op(path,data):
+    if DEBUG:print(path)
+    path=Dest/path
+    if not path.suffix=='.html':path=path/'index.html'
+    path.parent.mkdir(parents=1,exist_ok=1)
+    path.open('w',encoding='utf-8').write(data)
 def del_none(a):
     if not isinstance(a,dict):return {}
     for x in list(a.keys()):
@@ -31,16 +35,34 @@ def str2date(s):
     a=re.split(r'[- :]',s.strip())
     a.extend(['0']*6)
     return datetime(int(a[0]),int(a[1]),int(a[2]),int(a[3]),int(a[4]),int(a[5]))
-def geninfo(file,is_post=0,is_page=0):
+
+config=lyml(open('config.yml',encoding='utf-8').read())
+dest=config['dest']
+Dest=Path(dest)
+rt=config['site_rt']=urlparse(config['site_url']).path
+if config['article_address']=='pinyin':
+    try:import pypinyin
+    except:install('pypinyin');import pypinyin
+t_config=lyml(open('theme/%s/config.yml'%config['theme'],encoding='utf-8').read())
+t_setting=lyml(open('theme/%s/setting.yml'%config['theme'],encoding='utf-8').read())
+
+posts,pages=[],[]
+tags,categories={},{}
+index,tags_index,categories_index=[],[],[],
+urls=[]
+env,tpls=False,{}
+last_build_time=datetime.now().replace(microsecond=0)
+def genitem(file,is_post=0,is_page=0):
     data=file.open(encoding='utf-8').read().split('---\n')
-    meta=yaml.load(data[1],Loader=yamloader)
+    meta=del_none(lyml(data[1]))
+    if isinstance(meta['date'],str):meta['date']=str2date(meta['date'])
     content=''.join(data[2:])
     preview=content[0:min(len(content),config['preview_len'])]
     if '<!-- more -->' in content:
         preview=content.split('<!-- more -->',1)[0]
     name=file.stem
     x={**{
-        'id':None,
+        'filename':name,
         'assets':file.parent/file.stem,
         'addr':name+'/','link':rt+name+'/',
         'title':name,
@@ -49,9 +71,8 @@ def geninfo(file,is_post=0,is_page=0):
         'tags':[],'categories':[],
         'top':0,
         'content':content,'preview':preview,
-        'pre':None,'nxt':None,
-    },**t_setting['defaut_front'],**del_none(meta)}
-    if isinstance(x['date'],str):x['date']=str2date(x['date'])
+        'meta':meta,
+    },**t_setting['defaut_front'],**meta}
     if is_post:
         if config['article_address']=='pinyin':x['addr']='posts/%s/'%topinyin(name)
         elif config['article_address']=='origin':x['addr']='posts/%s/'%name
@@ -89,7 +110,7 @@ def gen_index(path,a,ext={}):
         x['nxt']=res[(id+1)%TOT]
     return res
 def read(path,is_post=0,is_page=0):
-    return [geninfo(i,is_post,is_page) for i in Path(path).glob('*.md')]
+    return [genitem(i,is_post,is_page) for i in Path(path).glob('*.md')]
 def read_all():
     global posts,pages
     posts=read('source/_posts',is_post=1)
@@ -105,7 +126,8 @@ def sort_posts():
             x['link']=rt+x['addr']
         x['pre']=posts[id-1]
         x['nxt']=posts[(id+1)%tot]
-    posts.sort(key=lambda x: '23333-12-31 '+str(x['top']) if x['top'] else str(x['date']),reverse=True)
+    posts.sort(key=lambda x:(x['top'],str(x['date'])),reverse=True)
+    for pos,x in enumerate(posts):x['pos']=pos
 def gen_categories_index(path,cates):
     if 'sub' in cates:
         for cate in cates['sub']:
@@ -149,38 +171,12 @@ def baidu_push():
        if not i[0] in oldurls:
            newurls+=i[0]+'\n'
     oldfile.open('w',encoding='utf-8').write(newurls)
+    try:import requests
+    except:install('requests');import requests
     r=requests.post(config['baidu_push']['url'],files={'file': oldfile.open('rb')})
     print('推送结果:\n%s\n'%r.text)
     oldfile.open('w',encoding='utf-8').write(oldurls+newurls)
-def cp(src,dst):
-    if DEBUG:print('copy',src,dst)
-    if src.is_dir():
-        if dst.exists():shutil.rmtree(dst)
-        shutil.copytree(src,dst)
-    else:
-        shutil.copyfile(src,dst)
-def op(path,data):
-    if DEBUG:print(path)
-    path=Dest/path
-    if not path.suffix=='.html':path=path/'index.html'
-    path.parent.mkdir(parents=1,exist_ok=1)
-    path.open('w',encoding='utf-8').write(data)
 
-####################################################################################
-
-try:yamloader=yaml.CLoader
-except:yamloader=yaml.SafeLoader
-
-config=yaml.load(open('config.yml',encoding='utf-8').read(),Loader=yamloader)
-dest=config['dest']
-Dest=Path(dest)
-rt=config['site_rt']=urlparse(config['site_url']).path
-if config['article_address']=='pinyin':import pypinyin
-t_config=yaml.load(open('theme/%s/config.yml'%config['theme'],encoding='utf-8').read(),Loader=yamloader)
-t_setting=yaml.load(open('theme/%s/setting.yml'%config['theme'],encoding='utf-8').read(),Loader=yamloader)
-urls=[]
-env,tpls=False,{}
-last_build_time=datetime.now().isoformat()
 DEBUG=0
 def debug(status=True):
     global DEBUG
@@ -196,12 +192,11 @@ def render_pure_data():
     } for x in posts+pages]))
 def init_env():
     global env,tpls
-    env=Environment(loader=FileSystemLoader('theme/%s/layout/'%config['theme']))
-    env.trim_blocks=True
-    env.lstrip_blocks=True
+    env=Environment(loader=FileSystemLoader('theme/%s/layout/'%config['theme']),trim_blocks=1)
     env.globals.update(**{
         'config':config,
         't_config':t_config,
+        't_setting':t_setting,
         'data':{
             'posts':posts,'pages':pages,
             'tags':tags,'categories':categories,
@@ -212,19 +207,18 @@ def init_env():
     env.filters['markdown']=mistune.Markdown()
     env.filters['markdown_math']=md_math.parse
     env.filters['encrypt']=encrypt
+    
     for i in t_setting['layout']:
         tpls[i]=env.get_template(t_setting['layout'][i])
 def render():
-    init_env()
     for i in posts+pages+index+tags_index+categories_index+t_setting['extra_render']:
         op(i['addr'],tpls[i['layout']].render(**i))
-        urls.append([config['site_url']+i['addr'],i['date'].isoformat() if 'date' in i else last_build_time])
+        urls.append([config['site_url']+i['addr'],i['date'] if 'date' in i else last_build_time])
 
-    env.loader=FileSystemLoader('tpl')
     def render_rss(typ):
-        (Dest/(typ+'.xml')).open('w',encoding='utf-8').write(env.get_template(typ+'.j2').render())
+        (Dest/(typ+'.xml')).open('w',encoding='utf-8').write(env.from_string(open('tpl/%s.j2'%typ,encoding='utf-8').read()).render())
     def render_sitemap():
-        (Dest/'sitemap.xml').open('w',encoding='utf-8').write(env.get_template('sitemap.j2').render(urls=urls))
+        (Dest/'sitemap.xml').open('w',encoding='utf-8').write(env.from_string(open('tpl/sitemap.j2',encoding='utf-8').read()).render(urls=urls))
         (Dest/'sitemap.txt').open('w',encoding='utf-8').write('\n'.join([i[0] for i in urls]))
 
     render_pure_data()
@@ -239,12 +233,14 @@ def main():
     calcTime('sort',sort_posts)
     calcTime('generate',generate)
     calcTime('copy assets',CpAssets)
+    calcTime('compile templates',init_env)
     calcTime('render',render)
     if config['baidu_push']['enable']:baidu_push()
 
 # server ======================================================
 
 mp={}
+tpls_admin,mp_admin={},{}
 def upd():
     read_all()
     sort_posts()
@@ -256,67 +252,151 @@ def set_interval(f,s):
     t.setDaemon(True)
     t.start()
     return t
-def response(client,addr):
-    req_data=client.recv(4096).decode()
-    data=req_data.split(' ')
-    method=data[0]
-    url=unquote(data[1],'utf-8')
-    path=urlparse(url).path
-    if not path.endswith('/') and '.' not in path:path+='/'
-    print(method,url)
-
-    if method=='POST':
-        postData=unquote(req_data.split('\r\n')[-1],'utf-8')
-        return
-        
-    res_line='HTTP/1.1 200 OK\r\n'
-    res_header='Server: WTT/1.1\r\n'
-    res_body='404'.encode()
-    if '/404.html' in mp:
-        x=mp['/404.html']
-        res_body=tpls[x['layout']].render(**x).encode()
-    elif Path('source/404.html').is_file():
-        res_body=rd('source/404.html')
-
-    def rd(path):
-        try:return open(path,encoding='utf-8').read().encode()
-        except:return open(path,'rb').read()
-    print(path)
-    if path in mp:
-        print(path)
-        x=mp[path]
-        res_body=tpls[x['layout']].render(**x).encode()
-    elif Path('source'+path).is_file():
-        res_body=rd('source'+path)
-    elif Path('theme/%s/source%s'%(config['theme'],path)).is_file():
-        res_body=rd('theme/%s/source%s'%(config['theme'],path))
-    else:
-        path=path.split('/')
-        i=3 if path[1]=='posts' else 2
-        par,now='/'.join(path[:i])+'/','/'.join(path[i:])
-        print(par,'-',now)
-        if par in mp:
-            x=mp[par]
-            if (x['assets']/now).is_file():
-                res_body=rd(str(x['assets']/now))
-
-    client.send((res_line+res_header+'\r\n').encode()+res_body)
-    client.close()
+def admin():
+    env_admin=Environment(loader=FileSystemLoader('admin/layout/'),trim_blocks=1)
+    env_admin.globals.update(**{
+        'config':config,
+        't_config':t_config,
+        't_setting':t_setting,
+        'data':{
+            'posts':posts,'pages':pages,
+            'tags':tags,'categories':categories,
+            'index':index,'tags_index':tags_index,'categories_index':categories_index
+        }
+    })
+    env_admin.filters=env.filters
+    env_admin.filters['toyaml']=dyml
+    env_admin.filters['rejectkey']=lambda x,*args: dict(i for i in x.items() if i[0] not in args)
+    tpls_admin['index']=env_admin.get_template('index.html')
+    tpls_admin['editPost']=env_admin.get_template('editPost.html')
+    tpls_admin['listPost']=env_admin.get_template('listPost.html')
+def apiLogin(data):
+    if data['password']==config['server']['password']:
+        return {'secret':config['server']['secret'],'status':'success'}
+    return {'secret':False,'status':'fail'}
+rmPost=lambda x:os.remove('source/_posts/%s.md'%x['filename'])    
+def postsUpd():
+    sort_posts()
+    generate()
+    for i in index+tags_index+categories_index:mp[rt+i['addr']]=i
+def apiEditPost(data):
+    data['meta']=del_none(lyml(data['meta']))
+    if 'date' not in data['meta']:data['meta']['date']=datetime.now().replace(microsecond=0)
+    elif isinstance(data['meta']['date'],str):data['meta']['date']=str2date(data['meta']['date'])    
+    data['meta'].update({
+        'title':data['title'],'top':data['top'],
+        'tags':data['tags'],'categories':data['categories']
+    })    
+    
+    file=Path('source/_posts/%s.md'%data['filename'])
+    file.open('w',encoding='utf-8').write(
+        '---\n'+
+        dyml(data['meta'])+
+        '\n---\n'+
+        data['content']
+    )
+    x=genitem(file,is_post=1)
+    if 'pos' in data:
+        post=posts[data['pos']]
+        if post['filename']!=data['filename']:rmPost(post)
+        posts[data['pos']]=x
+    else:posts.append(x)
+    postsUpd()
+    mp[rt+x['addr']]=x
+    return {'pos':x['pos'],'status':'success','redirect':data.get('pos')!=x['pos']}
+def apiRmPost(data):
+    if 'pos' not in data:return {'status':'failed'}
+    rmPost(posts[data['pos']])
+    posts.pop(data['pos']),mp.pop(rt+posts[data['pos']]['addr'])
+    postsUpd()
+    return {'status':'success'}
 def serve():
-    port=config['server']['port']
+    import string,random
+    # config['server']['secret']=''.join(random.sample(string.ascii_letters + string.digits,8))
+    global rt,env,tpls
+    rt='/'
     upd()
+    mp[rt+'sitemap.xml']={'layout':'sitemap'}
+    mp[rt+'atom.xml']={'layout':'atom'}
+    mp[rt+'rss.xml']={'layout':'rss'}
     init_env()
-    watch=set_interval(upd,config['server']['watch_interval'])
-    svr=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-    svr.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,True)
-    svr.bind(('',port))
-    svr.listen(128)
-    print('Serving on http://localhost:%d'%port)
-    while True:
-        client,addr=svr.accept()
-        t=threading.Thread(target=response,args=(client,addr),daemon=True)
-        t.start()
+    admin()
+    # watch=set_interval(upd,config['server']['watch_interval'])
 
+    try:from flask import Flask,request,make_response,abort,Response,send_from_directory
+    except:install('flask');from flask import Flask,request,make_response,abort,Response,send_from_directory
+
+    app=Flask(__name__)
+    @app.route('/admin/api/login',methods=['POST'])
+    def postLogin():
+        if request.get_json()['password']==config['server']['password']:
+            res=make_response({'secret':config['server']['secret'],'status':'success'})
+            res.set_cookie('secret',config['server']['secret'])
+            return res
+        else: return {'status':'failed'},500
+    @app.route('/admin/api/editPost/',methods=['POST'])
+    def postEditPost():
+        return apiEditPost(request.get_json())
+    @app.route('/admin/api/rmPost/',methods=['POST'])
+    def PostRmPost():
+        return apiRmPost(request.get_json())
+    @app.route('/admin/assets/<path:path>',methods=['GET'])
+    def getAdminAssets(path):
+        return send_from_directory('admin/assets/',path)
+    @app.route('/admin/',methods=['GET'])
+    def getAdmin():
+        return tpls_admin['index'].render(cookies=request.cookies)
+    @app.route('/admin/newPost/',methods=['GET'])
+    def getAdminNewPost():
+        return tpls_admin['editPost'].render(title='新建文章',cookies=request.cookies)
+    @app.route('/admin/editPost/<int:pos>',methods=['GET'])
+    def getAdminEditPost(pos):
+        return tpls_admin['editPost'].render(title='编辑文章',post=posts[pos],cookies=request.cookies)
+    @app.route('/admin/listPost/',methods=['GET'])
+    def getAdminListPost():
+        return tpls_admin['listPost'].render(title='文章列表',posts=posts,cookies=request.cookies)
+
+    @app.route('/sitemap.xml',methods=['GET'])
+    def getSitemap():
+        return env.from_string(open('tpl/sitemap.j2',encoding='utf-8').read()).render(urls=urls)
+    @app.route('/atom.xml',methods=['GET'])
+    def getAtom():
+        return Response(env.from_string(open('tpl/atom.j2',encoding='utf-8').read()).render(),mimetype='text/xml')
+    @app.route('/rss.xml',methods=['GET'])
+    def getRss():
+        return Response(env.from_string(open('tpl/rss.j2',encoding='utf-8').read()).render(),mimetype='text/xml')
+
+    @app.route('/')
+    def getIndex():
+        x=mp['/']
+        return tpls[x['layout']].render(**x,cookies=request.cookies)
+
+    @app.route('/<path:path>',methods=['GET'])
+    def getPath(path):
+        x=mp.get(request.path)
+        if x:return tpls[x['layout']].render(**x,cookies=request.cookies)
+        elif Path('source/'+path).exists():return send_from_directory('source/',path)
+        else:return send_from_directory('theme/%s/source/'%config['theme'],path)
+
+    @app.errorhandler(404)
+    def page_not_found(e):
+        if '/404.html' in mp:return tpls[mp['/404.html']['layout']].render(**mp['/404.html'])
+        elif Path('source/404.html').is_file():return send_from_directory('source/','404.html')
+        return '404 not found',404
+    
+    return app
+def serve_static():
+    try:from flask import Flask
+    except:install('flask');from flask import Flask
+
+    app=Flask(__name__,static_folder=config['dest'])
+    @app.route('/',defaults={'path': ''})
+    @app.route('/<path:path>')
+    def statics(path):
+        if path.endswith('/'):path+='index.html'
+        if '.' not in path.split('/')[-1]:path+='/index.html'
+        return app.send_static_file(path)
+    app.run()
 # cmd =========================================================
 
 def new_post(data):
@@ -332,7 +412,7 @@ def new_page(data):
         Template(open('tpl/scaffolds/page.j2',encoding='utf-8').read()).render(data)
     )
 def deploy(force):
-    if not Dest.exists():print('请先渲染博客'),sys.exit()
+    if not Dest.exists():print('请先渲染博客'),exit()
     Deploy=Path('deploy')
     ff=not Deploy.exists()
     repo=config['repo']
@@ -353,8 +433,9 @@ def show_help():
 4. [n/new] + [title]: 新建文章
 5. [np/newpage] + [title]: 新建页面
 6. [d/deploy]: 部署博客
+7. [S/Server]: 预览博客(静态,预览渲染后的文件)
 ''')
-    sys.exit()
+    exit()
 
 if __name__=='__main__':
     cmd=sys.argv[1:] if '.py' in sys.argv[0] else sys.argv
@@ -362,7 +443,8 @@ if __name__=='__main__':
     elif cmd[0][0]=='g':main()
     elif cmd[0][0:2]=='cl':
         if Dest.exists():shutil.rmtree(Dest)
-    elif cmd[0][0]=='s':serve()
+    elif cmd[0][0]=='s':serve().run(threaded=True)
+    elif cmd[0][0]=='S':serve_static()
     elif(cmd[0]=='n' or cmd[0]=='new'):new_post({
         'title':' '.join(cmd[1:]),
         'date':time.strftime('%Y-%m-%d %H:%M:%S',time.localtime())

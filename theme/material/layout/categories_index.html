@@ -1,6 +1,5 @@
-{%set page_typ='index'%}
-{%extends "base.html"%}
-{%block content%}
+{%extends "index.html"%}
+{%block content_head%}
 <div class="mdui-typo">
     <h1>
         {%set path_=path.split('/')%}
@@ -27,59 +26,6 @@
         </a><br>
     </div>
 {%-endfor%}
-</div>
-{%endif%}
-{%if nodes%}
-{%for i in nodes-%}
-<div class="mdui-card article">
-    {%if t_config.theme=='beauty'%}
-    <div class="mdui-card-media">
-        <a href="{{i.link}}">
-            <img data-src="{{mg(i.thumbnail,randimg())}}" height="300px" style="object-fit: cover;" src='{{assets_rt}}/icon/loading.svg' alt>
-        </a>
-        <div class="mdui-card-media-covered">
-            <div class="mdui-card-primary">
-                <a href="{{i.link}}" class="mdui-card-primary-title mdui-text mdui-text-color-white">{{i.title}}</a>
-                <div class="mdui-card-primary-subtitle">{{gen_tags(i.tags)}}</div>
-            </div>
-        </div>
-    </div>
-    {%else%}
-    <div class="mdui-card-primary">
-        <a href="{{i.link}}" class="mdui-card-primary-title">{{i.title}}</a>
-        <div class="mdui-card-primary-subtitle">{{gen_tags(i.tags)}}</div>
-    </div>
-    {%endif%}
-    <div class="mdui-card-content">
-        <div class="md-body" style="font-size: 14px !important">{{i.preview|markdown_math}}</div>
-    </div>
-    <div class="mdui-card-header">
-        <img class="mdui-card-header-avatar" src="{{mg(i.avatar,t_config.avatar)}}" alt='avatar'>
-        <div class="mdui-card-header-title">{{i.author}}</div>
-        <div class="mdui-card-header-subtitle">{{i.date}}</div>
-        <div class="mdui-card-menu">
-            <button class="mdui-btn mdui-btn-icon"
-                mdui-tooltip="{content: '文章分类'}"
-                mdui-menu="{target:'#categories-of-{{loop.index}}',align:'right',position:'top'}">
-                <i class="mdui-icon material-icons">bookmark</i>
-            </button>
-            <ul class="mdui-menu" id="categories-of-{{loop.index}}">{{gen_categories(i.categories)}}</ul>
-        </div>
-    </div>
-</div>
-{%-endfor%}
-<div class="mdui-row-xs-3 article">
-    <div class="mdui-col">
-        <a href="{{pre.link}}" class="mdui-btn mdui-btn-icon" {{'disabled' if not pre}} id='pre_button'>
-            <i class="mdui-icon material-icons">arrow_back</i>
-        </a>
-    </div>
-    <div class="mdui-col mdui-text-center">{{id}} / {{TOTAL}}</div>
-    <div class="mdui-col">
-        <a href="{{nxt.link}}" class="mdui-btn mdui-btn-icon mdui-float-right" {{'disabled' if not nxt}} id='nxt_button'>
-            <i class="mdui-icon material-icons">arrow_forward</i>
-        </a>
-    </div>
 </div>
 {%endif%}
 {%endblock%}

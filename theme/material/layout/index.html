@@ -1,44 +1,45 @@
 {%set page_typ='index'%}
+{%set math=nodes|selectattr('math')|list|length%}
 {%extends "base.html"%}
 {%block content%}
-{%if path==''%}{%include "head_card.html"%}{%endif%}
+{%block content_head%}
+{%if not addr%}{%include "head_card.html"%}{%endif%}
+{%endblock%}
+{%if nodes%}
+{%from "macros.html" import gen_tags,gen_categories,md%}
 {%for i in nodes-%}
 <div class="mdui-card article">
-    {%if t_config.theme=='beauty'%}
-    <div class="mdui-card-media">
-        <a href="{{i.link}}">
-            <img data-src="{{mg(i.thumbnail,randimg())}}" height="300px" style="object-fit: cover;" src='{{assets_rt}}/icon/loading.svg' alt>
-        </a>
-        <div class="mdui-card-media-covered">
-            <div class="mdui-card-primary">
-                <div class="mdui-card-primary-title">
-                    <a href="{{i.link}}" class="mdui-text mdui-text-color-white">{{'置顶' if i.top>0}}{{i.title}}</a>
-                </div>
-                <div class="mdui-card-primary-subtitle">{{gen_tags(i.tags)}}</div>
-            </div>
-        </div>
-    </div>
-    {%else%}
+    {%if i.thumbnail or t_config.theme=='beauty'%}
+    <a href="{{i.link}}" class="mdui-card-media">
+        <img data-src="{{i.thumbnail or randimg()}}" height="300px" style="object-fit: cover;" src='{{assets_rt}}/icon/loading.svg' alt>
+    </a>
+    {%endif%}
     <div class="mdui-card-primary">
-        <a href="{{i.link}}" class="mdui-card-primary-title">{{'置顶' if i.top>0}}{{i.title}}</a>
+        <a href="{{i.link}}" class="mdui-card-primary-title">{%if i.top>0%}[置顶]{%elif i.top<0%}[置底]{%endif%} {{i.title}}</a>
         <div class="mdui-card-primary-subtitle">{{gen_tags(i.tags)}}</div>
     </div>
-    {%endif%}
-    <div class="mdui-card-content">
-        <div class="md-body" style="font-size: 14px">{{i.preview|markdown_math}}</div>
+    {%if cookies and cookies.secret==config.server.secret%}
+    <div class="mdui-card-menu">
+        <a href='/admin/editPost/{{i.pos}}' class="mdui-btn mdui-btn-icon">
+            <i class="mdui-icon material-icons">edit</i>
+        </a>
     </div>
+    {%endif%}
     <div class="mdui-card-header">
-        <img class="mdui-card-header-avatar" src="{{mg(i.avatar,t_config.avatar)}}" alt='avatar'>
+        <img data-src="{{i.avatar or t_config.avatar}}" src='{{assets_rt}}/icon/loading.svg' alt='avatar' class="mdui-card-header-avatar">
         <div class="mdui-card-header-title">{{i.author}}</div>
         <div class="mdui-card-header-subtitle">{{i.date}}</div>
         <div class="mdui-card-menu">
-            <button class="mdui-btn mdui-btn-icon"
-                mdui-tooltip="{content: '文章分类'}"
-                mdui-menu="{target:'#categories-of-{{loop.index}}',align:'right',position:'top'}">
+            {%if i.categories%}
+            <button class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '文章分类'}" mdui-menu="{target:'#categories-{{loop.index}}',align:'right',covered: false}">
                 <i class="mdui-icon material-icons">bookmark</i>
             </button>
-            <ul class="mdui-menu" id="categories-of-{{loop.index}}">{{gen_categories(i.categories)}}</ul>
+            <ul class="mdui-menu" id="categories-{{loop.index}}">{{gen_categories(i.categories)}}</ul>
+            {%endif%}
         </div>
+    </div>
+    <div class="mdui-card-content">
+        <div class="md-body text" style="font-size:14px">{{"该文章有密码保护" if i.password else md(i.preview,i.math)}}</div>
     </div>
 </div>
 {%-endfor%}
@@ -55,4 +56,5 @@
         </a>
     </div>
 </div>
+{%endif%}
 {%endblock%}
