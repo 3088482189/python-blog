@@ -1,0 +1,31 @@
+{%extends "index.html"%}
+{%block content_head%}
+<div>
+    <h1>
+        {%set path_=path.split('/')%}
+        {%for i in path_-%}
+        {%if not loop.last%}
+        <a href="{{config.site.rt}}{%for j in range(0,loop.index)-%}{{path_[j]}}/{%-endfor%}">{{i}}/</a>
+        {%endif%}
+        {%-endfor%}
+        {%if total%}
+        <small>共{{total}}篇文章</small>
+        {%endif%}
+    </h1>
+</div>
+{%if sub%}
+<div>
+{%for i in sub-%}
+    <div>
+        <a href="{{config.site.rt}}{{path}}{{i}}/">
+            <div>
+                <div>
+                    <div>{{i}}</div>
+                </div>
+            </div>
+        </a><br>
+    </div>
+{%-endfor%}
+</div>
+{%endif%}
+{%endblock%}

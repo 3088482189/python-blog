@@ -1,0 +1,61 @@
+{%if t_config.comment.enable%}
+<div>
+    <h2>评论</h2>
+    <div id='comments'></div>
+</div>
+{%if t_config.comment.valine.enable%}
+<script>
+function SetComment(){
+    window.comment=new Valine({
+        el: '#comments',
+        placeholder: "{{t_config.comment.valine.placeholder}}",
+        appId: "{{t_config.comment.valine.appid}}",
+        appKey: "{{t_config.comment.valine.appkey}}",
+        path: window.location.pathname,
+    });
+}
+function GenComment(){
+    if(document.getElementById("comment_js"))SetComment();
+    else{
+        var valinejs=document.createElement('script');
+        valinejs.id="comment_js";
+        valinejs.src="https://cdn.jsdelivr.net/gh/xCss/Valine/dist/Valine.min.js";
+        valinejs.async=true;
+        valinejs.onload=SetComment;
+    }
+    document.getElementsByTagName("head")[0].appendChild(valinejs);
+}
+</script>
+{%elif t_config.comment.gitalk.enable%}
+<script>
+function SetComment(){
+    window.comment=new Gitalk({
+        clientID:'{{t_config.comment.gitalk.clientID}}',
+        clientSecret:'{{t_config.comment.gitalk.clientSecret}}',
+        repo:'{{t_config.comment.gitalk.repo}}',
+        owner:'{{t_config.comment.gitalk.owner}}',
+        admin: "{{t_config.comment.gitalk.admin}}",
+        id:location.pathname,
+        distractionFreeMode:{{t_config.comment.gitalk.distractionFreeMode}}
+    });
+    window.gitalk.render('comments');
+}
+function GenComment(){
+    if(document.getElementById("comment_js"))SetComment();
+    else{
+        var gtalkjs=document.createElement('script');
+        gtalkjs.id="comment_js";
+        gtalkjs.src="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js";
+        gtalkjs.async=true;
+        gtalkjs.onload=SetComment;
+        var gtalkcss=document.createElement('link');
+        gtalkcss.id="comment_css";
+        gtalkcss.href="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.css";
+        gtalkcss.type='text/css';
+        gtalkcss.rel='stylesheet';
+        document.getElementsByTagName("head")[0].append(gtalkjs,gtalkcss);
+    }
+}
+</script>
+{%endif%}
+{%else%}评论未开放{%endif%}

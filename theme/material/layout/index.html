@@ -11,7 +11,7 @@
 <div class="mdui-card article">
     {%if i.thumbnail or t_config.theme=='beauty'%}
     <a href="{{i.link}}" class="mdui-card-media">
-        <img data-src="{{i.thumbnail or randimg()}}" height="300px" style="object-fit: cover;" src='{{assets_rt}}/icon/loading.svg' alt>
+        <img data-src="{{i.thumbnail or randimg()}}" height="300px" style="object-fit: cover;" src='{{assets_rt}}icon/loading.svg' alt>
     </a>
     {%endif%}
     <div class="mdui-card-primary">
@@ -26,7 +26,9 @@
     </div>
     {%endif%}
     <div class="mdui-card-header">
-        <img data-src="{{i.avatar or t_config.avatar}}" src='{{assets_rt}}/icon/loading.svg' alt='avatar' class="mdui-card-header-avatar">
+        {%if i.avatar or t_config.avatar %}
+        <img data-src="{{i.avatar or t_config.avatar}}" src='{{assets_rt}}icon/loading.svg' alt='avatar' class="mdui-card-header-avatar">
+        {%endif%}
         <div class="mdui-card-header-title">{{i.author}}</div>
         <div class="mdui-card-header-subtitle">{{i.date}}</div>
         <div class="mdui-card-menu">

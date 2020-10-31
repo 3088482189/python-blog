@@ -1,0 +1,16 @@
+{%set page_typ='index'%}
+{%extends "base.html"%}
+{%block content%}
+<div id='tag_list'>
+{%for i in data.tags|sort-%}
+    <div>
+        <a href="/tags/{{i}}/">
+            <div>
+                <div>{{i}}</div>
+                <div>共{{data.tags[i]|length}}篇文章</div>
+            </div>
+        </a><br>
+    </div>
+{%-endfor%}
+</div>
+{%endblock%}

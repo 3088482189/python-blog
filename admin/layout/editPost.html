@@ -1,0 +1,248 @@
+{%extends "base.html"%}
+{%block content%}
+<div id='loading' class="mdui-spinner" style="position:fixed;top:0;bottom:0;left:0;right:0;margin:auto;z-index:999;height:50px;width:50px"></div>
+<div class="mdui-card" style="margin-top: 50px;">
+    <div id='editorLoading' style="position:absolute;width:100%;height:100%;z-index:998;background:#fff"></div>
+    <div class="mdui-card-primary">
+        <div class="mdui-card-primary-title">{{'编辑' if post else '新建'}}文章</div>
+        <div class="mdui-card-primary-subtitle">{{'edit' if post else 'new'}} post</div>
+    </div>
+    <div class="mdui-card-content">
+        <div class="mdui-row-xs-1 mdui-row-md-3">
+            <div class="mdui-col mdui-textfield">
+                <i class="mdui-icon material-icons">location_on</i>
+                <input id='filename' class="mdui-textfield-input" type="text" placeholder="文件名(访问地址)">
+            </div>
+            <div class="mdui-col mdui-textfield">
+                <i class="mdui-icon material-icons">title</i>
+                <input id='title' class="mdui-textfield-input" type="text" placeholder="标题">
+            </div>
+            <div class="mdui-col mdui-textfield">
+                <i class="mdui-icon material-icons">vertical_align_top</i>
+                <input id='top' class="mdui-textfield-input" type="number" placeholder="置顶优先级">
+            </div>
+        </div>
+        <div class="mdui-row-xs-1 mdui-row-md-2">
+            <div class="mdui-col">
+                <div class="mdui-card">
+                    <div class="mdui-card-primary">
+                        <div class="mdui-card-primary-title">标签</div>
+                        <div class="mdui-card-primary-subtitle">tags</div>
+                    </div>
+                    <div id='tags' class="mdui-card-content">
+                        <div class="mdui-textfield mdui-textfield-expandable" style="margin-bottom: 5px;">
+                            <button class="mdui-textfield-icon mdui-btn mdui-btn-icon" mdui-tooltip="{'content':'添加新标签'}">
+                                <i class="mdui-icon material-icons">add</i>
+                            </button>
+                            <input id='addTag_str' class="mdui-textfield-input" type="text" placeholder="新标签">
+                            <button id='addTag_btn' class="mdui-textfield-close mdui-btn mdui-btn-icon">
+                                <i class="mdui-icon material-icons">check</i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mdui-col">
+                <div class="mdui-card">
+                    <div class="mdui-card-primary">
+                        <div class="mdui-card-primary-title">分类</div>
+                        <div class="mdui-card-primary-subtitle">categories</div>
+                    </div>
+                    <div class="mdui-card-content">
+                        <div class="mdui-textfield mdui-textfield-expandable" style="margin-bottom: 5px;">
+                            <button class="mdui-textfield-icon mdui-btn mdui-btn-icon" mdui-tooltip="{content:'添加新分类'}">
+                                <i class="mdui-icon material-icons">add</i>
+                            </button>
+                            <input id='addCategorie_str' class="mdui-textfield-input" type="text" placeholder="新分类">
+                            <button id='addCategorie_btn' class="mdui-textfield-close mdui-btn mdui-btn-icon">
+                                <i class="mdui-icon material-icons">check</i>
+                            </button>
+                        </div>
+                        <ul id='categories' class="mdui-list mdui-list-dense" style="padding: 0;">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mdui-card" style="margin-top: 10px;">
+            <div class="mdui-card-primary">
+                <div class="mdui-card-primary-title">补充信息</div>
+                <div class="mdui-card-primary-subtitle">extra meta</div>
+            </div>
+            <div id='extMeta' class="mdui-card-content" style="min-height: 100px;"></div>
+        </div>
+        <div class="mdui-divider" style="margin: 20px;"></div>
+        <div class="mdui-card">
+            <div class="mdui-card-primary">
+                <div class="mdui-card-primary-title">内容</div>
+                <div class="mdui-card-primary-subtitle">content</div>
+            </div>
+            <div id='content' class="md-body mdui-card-content" style="min-height: 200px;"></div>
+            <div class="mdui-card-menu">
+                <button class="mdui-btn mdui-btn-icon" onclick="edit()" mdui-tooltip="{content:'使用stackedit编辑'}">
+                    <i class="mdui-icon material-icons">edit</i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="mdui-card-menu">
+        <button class="mdui-btn mdui-btn-icon" onclick="save()" mdui-tooltip="{content:'保存文章'}">
+            <i class="mdui-icon material-icons">save</i>
+        </button>
+        {%if post%}
+        <a href="/{{post.addr}}" target="_blank" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content:'查看文章'}">
+            <i class="mdui-icon material-icons">open_in_new</i>
+        </a>
+        <button class="mdui-btn mdui-btn-icon" onclick="remove()" mdui-tooltip="{content:'删除文章'}">
+            <i class="mdui-icon material-icons">delete</i>
+        </button>
+        {%endif%}
+    </div>
+</div>
+<script async src="/admin/assets/stackedit.min.js"></script>
+<script defer>
+var loading=document.getElementById('loading');
+var content=document.getElementById("content"),
+    meta=document.getElementById("meta"),
+    tags=document.getElementById('tags'),
+    categories=document.getElementById('categories');
+
+function edit(){
+    const stackedit=new Stackedit();
+    stackedit.on('fileChange',(file)=>{contentEditor.setValue(file.content.text);});
+    stackedit.openFile({content:{text:contentEditor.getValue()}});
+}
+var Tags=[],Categories=[];
+function addTag(tag){
+    var x=document.createElement('div'),
+        title=document.createElement('span'),
+        close=document.createElement('span');
+    x.classList.add('mdui-chip');
+    title.classList.add('mdui-chip-title');
+    title.innerHTML=tag;
+    close.classList.add('mdui-chip-delete');
+    close.innerHTML="<i class='mdui-icon material-icons'>cancel</i>";
+    close.onclick=function(){
+        x.remove();
+        Tags.splice(Tags.indexOf(tag),1);
+    }
+    x.append(title,close);
+    tags.append(x);
+    Tags.push(tag);
+}
+var addTag_btn=document.getElementById('addTag_btn'),
+    addTag_str=document.getElementById('addTag_str');
+addTag_btn.onclick=addTag_str.onchange=()=>{
+    if(addTag_str.value)
+        addTag(addTag_str.value),addTag_str.value='';
+}
+function addCategorie(categorie){
+    var x=document.createElement('li'),
+        content=document.createElement('div'),
+        close=document.createElement('button');
+    x.classList.add('mdui-list-item');
+    content.classList.add('mdui-list-item-content');
+    content.innerHTML=categorie.join('/');
+    close.classList.add('mdui-list-item-icon','mdui-btn','mdui-btn-icon');
+    close.innerHTML="<i class='mdui-icon material-icons'>delete</i>";
+    close.onclick=function(){
+        x.remove();
+        Categories.splice(Categories.indexOf(categorie),1);
+    }
+    x.append(content,close);
+    categories.append(x);
+    Categories.push(categorie);
+}
+var addCategorie_btn=document.getElementById('addCategorie_btn'),
+    addCategorie_str=document.getElementById('addCategorie_str');
+addCategorie_btn.onclick=addCategorie_str.onchange=()=>{
+    if(addCategorie_str.value)
+        addCategorie(addCategorie_str.value.split(',')),addCategorie_str.value='';
+}
+var monacoEditorLoader=document.createElement('script');
+monacoEditorLoader.src="/admin/assets/monaco-editor/loader.js";
+monacoEditorLoader.async=1;
+monacoEditorLoader.onload=()=>{
+    require.config({paths:{'vs':'/admin/assets/monaco-editor'}});
+    require(['vs/editor/editor.main'],()=>{
+    	extMetaEditor=monaco.editor.create(document.getElementById('extMeta'),{
+    		value:[].join('\n'),
+            language: 'yaml',
+            theme:'vs',
+            automaticLayout: true
+        });
+        contentEditor=monaco.editor.create(document.getElementById('content'),{
+    		value:[].join('\n'),
+            language: 'markdown',
+            theme:'vs',
+            automaticLayout: true
+        });
+        {%if post%}
+        contentEditor.setValue({{post.content|tojson}});
+        
+        document.getElementById('filename').value={{post.filename|tojson}};
+        document.getElementById('title').value={{post.title|tojson}};
+        document.getElementById('top').value={{post.top|tojson}};
+        for(var i of {{post.tags|tojson}})addTag(i);
+        for(var i of {{post.categories|tojson}})addCategorie(i);
+        extMetaEditor.setValue({{post.meta|rejectkey('title','top','tags','categories')|toyaml|tojson}});
+        {%endif%}
+
+        document.getElementById('editorLoading').hidden=1;
+        loading.hidden=1;
+    });
+}
+document.body.append(monacoEditorLoader);
+
+async function save(){
+    var res={
+        {%if post%}'pos':{{post.pos}},{%endif%}
+        'filename':document.getElementById('filename').value,
+        'title':document.getElementById('title').value,
+        'top':Number(document.getElementById('top').value),
+        'tags':Tags,'categories':Categories,
+        'meta':extMetaEditor.getValue(),
+        'content':contentEditor.getValue()
+    },RES=JSON.stringify(res);
+    loading.hidden=0;
+    var data=await fetch('/admin/api/editPost/',{
+        method:'POST',
+        headers:{
+            'content-type':'application/json',
+            'content-Length':RES.length
+        },
+        'body':RES
+    }).then(resp=>resp.json());
+    loading.hidden=1;
+    console.log(data);
+    if(data.status=='success'){
+        mdui.snackbar({message:'保存成功'});
+        if(data.redirect)location.replace(`/admin/editPost/${data.pos}`);
+    }
+    else mdui.snackbar({message:'保存失败,请重试'});
+}
+async function remove(){
+    loading.hidden=0;
+    var data=await fetch('/admin/api/rmPost/',{
+        method:'POST',
+        headers:{'content-type':'application/json'},
+        'body':JSON.stringify({
+            {%if post%}'pos':{{post.pos}},{%endif%}
+        })
+    }).then(resp=>resp.json());
+    console.log(data);
+    if(data.status=='success'){
+        mdui.snackbar({message:'删除成功'});
+        location.replace('/admin/listPost/');
+    }
+    else mdui.snackbar({message:'删除失败,请重试'});
+    loading.hidden=1;
+}
+document.addEventListener('keydown',function(e){
+    if(e.keyCode==83&&(navigator.platform.match("Mac")?e.metaKey:e.ctrlKey)){
+        e.preventDefault();
+        save();
+    }
+}, false);
+</script>
+{%endblock%}

@@ -1,0 +1,53 @@
+{%set math=nodes|selectattr('math')|list|length%}
+{%extends "base.html"%}
+{%block content%}
+{%block content_head%}
+
+{%endblock%}
+{%if nodes%}
+{%from "macros.html" import gen_tags,gen_categories,md%}
+{%for i in nodes-%}
+<div>
+    <div>
+        <a href="{{i.link}}">{%if i.top>0%}[置顶]{%elif i.top<0%}[置底]{%endif%} {{i.title}}</a>
+        <div>{{gen_tags(i.tags)}}</div>
+    </div>
+    {%if cookies and cookies.secret==config.server.secret%}
+    <div>
+        <a href='/admin/editPost/{{i.pos}}'>
+            <i>edit</i>
+        </a>
+    </div>
+    {%endif%}
+    <div>
+        <div>{{i.author}}</div>
+        <div>{{i.date}}</div>
+        <div>
+            {%if i.categories%}
+            <button>
+                <i>bookmark</i>
+            </button>
+            <ul>{{gen_categories(i.categories)}}</ul>
+            {%endif%}
+        </div>
+    </div>
+    <div>
+        <div if i.password else md(i.preview,i.math)}}</div>
+    </div>
+</div>
+{%-endfor%}
+<div>
+    <div>
+        <a href="{{pre.link}}" {{'disabled' if not pre}} id='pre_button'>
+            <i>arrow_back</i>
+        </a>
+    </div>
+    <div>{{id}} / {{TOTAL}}</div>
+    <div>
+        <a href="{{nxt.link}}" {{'disabled' if not nxt}} id='nxt_button'>
+            <i>arrow_forward</i>
+        </a>
+    </div>
+</div>
+{%endif%}
+{%endblock%}

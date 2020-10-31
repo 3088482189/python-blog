@@ -1,6 +1,7 @@
 ---
 author: zcmimi
-categories: []
+categories:
+- - test
 copyright: true
 date: 2020-03-06 10:17:00
 math: true

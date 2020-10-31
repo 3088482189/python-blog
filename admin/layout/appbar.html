@@ -1,0 +1,15 @@
+<div class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-color-white">
+    <div class="mdui-toolbar mdui-color-theme">
+        <button class="mdui-btn mdui-btn-icon" mdui-drawer="{target:'#drawer'}" mdui-tooltip="{content: '菜单'}">
+            <i class="mdui-icon material-icons">menu</i>
+        </button>
+        <button onclick="history.go(-1);" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '管理面板'}">
+            <i class="mdui-icon material-icons">arrow_back</i>
+        </button>
+        <div class="mdui-typo-title">{{Title}}</div>
+        <div class="mdui-toolbar-spacer"></div>
+        <!-- <button class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '退出登录'}" onclick="document.cookie='secret=&quot;&quot; ;expires=1';location.replace('/admin/');">
+            <i class="mdui-icon material-icons">exit_to_app</i>
+        </button> -->
+    </div>
+</div>

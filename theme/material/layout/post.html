@@ -3,10 +3,10 @@
 {%block content%}
 {%from "macros.html" import gen_tags,gen_categories,md%}
 <div class="mdui-card article">
-    {%if thumbnail or t_config.theme=='beauty'%}
+    {%if thumbnail or t_config.randomimg.enable %}
     <a href="{{link}}">
     <div class="mdui-card-media">
-        <img data-src="{{thumbnail or randimg()}}" height="300px" style="object-fit: cover;" src='{{assets_rt}}/icon/loading.svg' alt>
+        <img data-src="{{thumbnail or randimg()}}" height="300px" style="object-fit: cover;" src='{{assets_rt}}icon/loading.svg' alt>
     </div>
     </a>
     {%endif%}
@@ -23,7 +23,7 @@
     </div>
     {%endif%}
     <div class="mdui-card-header">
-        <img data-src="{{avatar or t_config.avatar}}" src='{{assets_rt}}/icon/loading.svg' alt='avatar' class="mdui-card-header-avatar">
+        <img data-src="{{avatar or t_config.avatar}}" src='{{assets_rt}}icon/loading.svg' alt='avatar' class="mdui-card-header-avatar">
         <div class="mdui-card-header-title">{{author}}</div>
         <div class="mdui-card-header-subtitle">{{date}}</div>
         <div class="mdui-card-menu">

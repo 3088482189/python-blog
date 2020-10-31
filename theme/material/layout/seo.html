@@ -1,27 +1,29 @@
-<meta name='description' itemprop="description" content="">
-<meta name="keywords" content="{{config.author}}">
-<meta property="og:url" content="{{config.site_url}}">
+<meta name="name" itemprop="name" content="{{config.site.name}}">
+<meta name="description" itemprop="description" content="{{config.site.description}}">
+<meta name="keywords" itemprop="keywords" content="{{config.site.keywords}}">
+<meta name="image" itemprop="image" content="{{config.site.icon}}">
+<meta property="og:url" content="{{config.site.url}}">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="{{config.site_name}}">
-<meta property="og:image" content="{{config.site_icon}}">
-<meta property="og:description" content="">
-<link rel="canonical" href="{{config.site_url}}">
+<meta property="og:title" content="{{config.site.name}}">
+<meta property="og:image" content="{{config.site.icon}}">
+<meta property="og:description" content="{{config.site.description}}">
+<link rel="canonical" href="{{config.site.url}}">
 <script type="application/ld+json">{
     "@context": "http://schema.org",
     "@type": "Website",
     "publisher":{
         "@type":"Organization",
-        "name":"{{config.site_name}}",
-        "logo":"{{config.site_icon}}"
+        "name":"{{config.site.name}}",
+        "logo":"{{config.site.icon}}"
     },
-    "url":"{{config.site_url}}",
+    "url":"{{config.site.url}}",
     "image":{
         "@type":"ImageObject",
-        "url":"{{config.site_icon}}"
+        "url":"{{config.site.icon}}"
     },
     "mainEntityOfPage": {
         "@type": "WebPage",
-        "@id": "{{config.site_url}}"
+        "@id": "{{config.site.url}}"
     },
     "description":""
 }</script>

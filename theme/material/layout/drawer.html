@@ -1,6 +1,5 @@
 <div class="mdui-drawer mdui-drawer-close" id="drawer">
     <ul class="mdui-list">
-        <li><center><img src="{{t_config.avatar}}" alt='avatar' class="mdui-img-fluid mdui-img-rounded"></img></center></li>
         {%for i in t_config.drawer-%}
             <li class='mdui-subheader'>{{i}}</li>
             {%for j in t_config.drawer[i]-%}
@@ -12,7 +11,7 @@
                     {%else%}
                     <img class="mdui-list-item-icon" src="{{j.icon.data}}" alt>
                     {%endif%}
-                    <a href="{{j.url}}" target="_blank" class="mdui-list-item-content">{{j.content}}</a>
+                    <a href="{{j.url}}" target="_blank" rel="noopener" class="mdui-list-item-content">{{j.content}}</a>
                 </li>
             {%-endfor%}
         {%-endfor%}

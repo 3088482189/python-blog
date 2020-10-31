@@ -1,0 +1,25 @@
+comment: 
+  enable: False
+  valine:
+    enable: False
+    appid: NLh0fhL**********vtOIRx5-gzGzoHsz 
+    appkey: DSwqdj**********QypfkcB9
+    placeholder: 说几句嘛qwq
+  gitalk:
+    enable: False
+    clientID: 0549*****548e6fe427e
+    clientSecret: b31fa*****7311ca7e6673ab84727ae9562c69ba
+    repo: zcmimi.github.io
+    owner: zcmimi
+    admin: zcmimi
+    distractionFreeMode: 'false'
+
+footer:
+  enable: True
+  site_create_date: 2019
+  site_till_date: 2020
+
+all_math: False
+
+copyright: 
+  license: <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh">CC BY-NC-SA 3.0</a>

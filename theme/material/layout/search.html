@@ -1,4 +1,4 @@
-<div class="mdui-dialog" id="search_dialog">
+<div class="mdui-dialog" id="search_dialog" style="min-height: 50%;">
     <div class="mdui-dialog-title">Search</div>
     <div class="mdui-dialog-content">
         <div class="mdui-textfield">
@@ -8,10 +8,10 @@
         <div id="search_result" class="mdui-list"></div>
     </div>
 </div>
-{%if t_config.search.typ=='local'%}
-<script async src='{{assets_rt}}/local_search.js'></script>
+{%if t_config.search.typ=='file'%}
+<script async src='{{assets_rt}}local_search.js'></script>
 <script>document.getElementById('search_input').onchange=function(){search("{{t_config.search.file}}");}</script>
 {%elif t_config.search.typ=='worker'%}
-<script async src='{{assets_rt}}/worker_search.js'></script>
+<script async src='{{assets_rt}}serverless_search.js'></script>
 <script>document.getElementById('search_input').onchange=function(){search("{{t_config.search.api}}");}</script>
 {%endif%}

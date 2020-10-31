@@ -1,0 +1,21 @@
+{%set Title=(title+' - ' if title else '') + config.site.name%}
+<!DOCTYPE html>
+<html lang="{{config.lang}}">
+<head>
+    <title>{{Title}}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="dns-prefetch" href="{{config.site.url}}">
+    {% include "css.html" %}
+    <link rel="shortcut icon" href="{{config.site.icon}}">
+</head>
+<body>
+    <div>
+        {%block content%}{%endblock%}
+    </div>
+</body>
+{% include "footer.html" %}
+{% include "js.html" %}
+{%include "custom.html"%}
+{% include "seo.html" %}
+</html>

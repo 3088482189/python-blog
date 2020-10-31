@@ -1,0 +1,25 @@
+{%set Title=title+' - admin' if title else 'admin'%}
+<!DOCTYPE html>
+<html lang="{{config.lang}}">
+<head>
+    <title>{{Title}}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% include "css.html" %}
+    <link rel="shortcut icon" href="{{config.site.icon}}">
+    <style>
+    .mdui-appbar{box-shadow: 0 1px 6px 0 rgba(32,33,36,.28);}
+    .mdui-card,.mdui-btn-raised,.mdui-panel{box-shadow:0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);}
+    </style>
+</head>
+<body class="mdui-appbar-with-toolbar mdui-theme-accent-blue">
+    {%include "appbar.html"%}
+    <div class="mdui-container">{%block content%}{%endblock%}</div>
+    {%include "drawer.html"%}
+</body>
+<script>
+var x=document.querySelector('body .mdui-container');
+x.style.minHeight=window.innerHeight-document.body.clientHeight+x.clientHeight+'px';
+</script>
+{% include "js.html" %}
+</html>

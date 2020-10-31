@@ -1,0 +1,69 @@
+{%set page_typ='article'%}
+{%extends "base.html"%}
+{%block content%}
+{%from "macros.html" import gen_tags,gen_categories,md%}
+<div>
+    <div>
+        <a href="{{link}}">{{title}}</a>
+        <div>{{gen_tags(tags)}}</div>
+    </div>
+
+    {%if cookies and cookies.secret==config.server.secret%}
+    <div>
+        <a href='/admin/editPost/{{pos}}'>
+            <i>edit</i>
+        </a>
+    </div>
+    {%endif%}
+    <div>
+        <div>{{author}}</div>
+        <div>{{date}}</div>
+        <div>
+            {%if categories%}
+            <ul>{{gen_categories(categories)}}</ul>
+            {%endif%}
+        </div>
+    </div>
+    <div>
+        {{html}}
+
+        {%if password%}
+        <div id="md-body" hidden>{{md(content,math)|encrypt(password)}}</div>
+        <div>
+            <label>请输入密码:</label>
+            <input>
+        </div>
+        <script src='https://cdn.jsdelivr.net/gh/brix/crypto-js@4.0.0/crypto-js.min.js'></script>
+<script>
+function de(data,passwd){while(passwd.length%16)passwd+='\0';var decrypt=CryptoJS.AES.decrypt(data,CryptoJS.enc.Utf8.parse(passwd),{mode: CryptoJS.mode.ECB,padding: CryptoJS.pad.Pkcs7});return decrypt.toString(CryptoJS.enc.Utf8);}
+var md_body=document.getElementById('md-body'),passwd=document.getElementById('passwd');
+const content=md_body.innerText;
+passwd.oninput=function(){
+    var data=de(content,this.value);
+    if(data){
+        md_body.innerHTML=data;
+        this.parentElement.hidden=1;
+        md_body.hidden=0;
+        highlight(),gentoc("md-body"),katex_();
+    }
+}
+</script>
+        {%else%}
+        <div id="md-body">{{md(content,math)}}</div>
+        {%endif%}
+        {%if t_config.copyright and (copyright or t_config.copyright.all)%}{%include "copyright.html"%}{%endif%}
+    </div>
+</div>
+{%block content_tail%}
+<div>
+    <div>
+        <a href="{{pre.link}}">上一篇: {{pre.title}}</a>
+    </div>
+    <div>{{title}}</div>
+    <div>
+        <a href="{{nxt.link}}">下一篇: {{nxt.title}}</a>
+    </div>
+</div>
+{%endblock%}
+{%if comment%}{%include "comment.html"%}{%endif%}
+{%endblock%}

@@ -1,0 +1,41 @@
+{%extends "base.html"%}
+{%block content%}
+<div class="mdui-typo">
+    <h2 style="margin-top: 50px;">欢迎回来,{{config.author}}!</h2>
+</div>
+<style>a{text-decoration-line: none;}</style>
+<div class="mdui-row-xs-1 mdui-row-sm-2 mdui-row-md-4 mdui-row-lg-5" style="margin-top: 50px;">    
+    <div class="mdui-col">
+        <a href="/admin/newPost/">
+            <div class="mdui-card">
+                <div class="mdui-card-primary">
+                    <div class="mdui-card-primary-title">新建文章</div>
+                    <div class="mdui-card-primary-subtitle">new post</div>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="mdui-col">
+        <a href="/admin/listPost/">
+            <div class="mdui-card">
+                <div class="mdui-card-primary">
+                    <div class="mdui-card-primary-title">文章列表</div>
+                    <div class="mdui-card-primary-subtitle">list post</div>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+<div class="mdui-row-xs-1 mdui-row-sm-2 mdui-row-md-4 mdui-row-lg-5" style="margin-top: 50px;">
+    <div class="mdui-col">
+        <a href="/admin/api/update" target="_blank">
+            <div class="mdui-card">
+                <div class="mdui-card-primary">
+                    <div class="mdui-card-primary-title">重新读取</div>
+                    <div class="mdui-card-primary-subtitle">reload from file</div>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+{%endblock content%}

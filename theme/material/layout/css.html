@@ -1,9 +1,11 @@
-<link rel="stylesheet" href="{{assets_rt}}/mdui/css/mdui.min.css">
-<link rel="stylesheet" href="{{assets_rt}}/theme/origin.css">
-<link rel="stylesheet" href="{{assets_rt}}/icon/mqii/mqii.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/{{t_config.highlight.theme}}.min.css">
-<link rel="stylesheet" href="{{assets_rt}}/markdown.min.css">
+<link rel="preload" href="{{assets_rt}}mdui/css/mdui.min.css" as="style">
+<link rel="stylesheet" href="{{assets_rt}}mdui/css/mdui.min.css" >
+<link rel="preload" href="{{assets_rt}}theme/origin.css" as="style">
+<link rel="stylesheet" href="{{assets_rt}}theme/origin.css">
+<link rel="stylesheet" href="{{assets_rt}}icon/mqii/mqii.css" media="print" onload='this.media="all"'>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/{{t_config.highlight.theme}}.min.css" media="print" onload='this.media="all"'>
+<link rel="stylesheet" href="{{assets_rt}}markdown.min.css" media="print" onload='this.media="all"'>
 {%if t_config.all_math or math%}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css" media="print" onload='this.media="all"'>
 {%endif%}
 <link rel="stylesheet" href="/custom.css">

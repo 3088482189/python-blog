@@ -1,16 +1,15 @@
-{%set assets_rt= t_config.assets_rt if t_config.assets_rt else '/assets'%}
-{%set Title=(title+' - ' if title else '') + config.site_name%}
-{% include 'macros.html' %}
+{%set assets_rt= t_config.assets_rt if t_config.assets_rt else '/assets/'%}
+{%set Title=(title+' - ' if title else '') + config.site.name%}
 <!DOCTYPE html>
 <html lang="{{config.lang}}">
 <head>
     <title>{{Title}}</title>
-    {% include "seo.html" %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="dns-prefetch" href="{{config.site_url}}">
+    <link rel="dns-prefetch" href="{{config.site.url}}">
     {% include "css.html" %}
-    <link rel="shortcut icon" href="{{config.site_icon}}">
+    <link rel="shortcut icon" href="{{config.site.icon}}">
+    {% include "seo.html" %}
 </head>
 <body class="mdui-appbar-with-toolbar mdui-theme-accent-blue">
     <div class="mdui-progress" id='loading-progress' style="position: fixed;top:0;z-index: 999999;"><div class="mdui-progress-indeterminate"></div></div>
@@ -28,33 +27,27 @@
 <button class="mdui-fab mdui-fab-mini mdui-fab-fixed mdui-fab-hide" id="totop" onclick="totop()" style="z-index: 99999;">
     <i class="mdui-icon material-icons">keyboard_arrow_up</i>
 </button>
-{%if t_config.footer.enable%}{% include "footer.html" %}{%endif%}
+{% include "footer.html" %}
 {% include "search.html" %}
 {% include "js.html" %}
 
 {%if t_config.pjax%}
-<script async>
+<script defer>
 var pjaxjs=document.createElement("script");
-pjaxjs.src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js";
-pjaxjs.async=true;
-pjaxjs.onload=function(){
-    var pjax=new Pjax({elements:"a",selectors:[
-        "title",
-        "#TOC",
-        ".mdui-container",
-        ".js-pjax"
-    ]});
-    document.addEventListener('pjax:send',function(){document.getElementById('loading-progress').hidden=0;});
-    document.addEventListener('pjax:complete',function(){document.getElementById('loading-progress').hidden=1;pjax_load();mdui.mutation();});
+pjaxjs.src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js";pjaxjs.async=true;
+pjaxjs.onload=()=>{
+    var pjax=new Pjax({elements:"a",selectors:["title","#TOC",".mdui-container",".js-pjax"]});
+    document.addEventListener('pjax:send',()=>{document.getElementById('loading-progress').hidden=0;});
+    document.addEventListener('pjax:complete',()=>{document.getElementById('loading-progress').hidden=1;pjax_load();});
 }
-document.getElementsByTagName("head")[0].appendChild(pjaxjs);
+document.getElementsByTagName("head")[0].append(pjaxjs);
 </script>
 {%endif%}
 
 {%if t_config.comment.enable%}
-<script async>
-window.addEventListener('load',function(){try{GenComment();}catch{}});
-document.addEventListener('pjax:complete',function(){try{GenComment();}catch{}});
+<script defer>
+window.addEventListener('load',()=>{try{GenComment();}catch{}});
+document.addEventListener('pjax:complete',()=>{try{GenComment();}catch{}});
 </script>
 {%endif%}
 

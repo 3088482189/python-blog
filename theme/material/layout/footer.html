@@ -7,7 +7,7 @@
                         <div class="mdui-row">
                             {%for i in t_config.footer.icons-%}
                                 <div class="mdui-col-xs-2 mdui-col-sm-1 mdui-col-md-1" style="margin: 10px;">
-                                    <a href="{{t_config.footer.icons[i]}}">
+                                    <a href="{{t_config.footer.icons[i]}}" target="_blank" rel="noopener">
                                         <i class="mdui-icon mqii mqii-{{i}}"></i>
                                     </a>
                                 </div>
@@ -15,10 +15,10 @@
                         </div>
                     </div>
                     <div class="mdui-col mdui-text-center">
-                        <span>Copyright ©&nbsp;{{t_config.footer.site_create_date}}-{{t_config.footer.site_till_date}}&nbsp;{{config.site_name}}</span>
+                        <span>Copyright ©&nbsp;{{t_config.footer.site_create_date}}-{{t_config.footer.site_till_date}}&nbsp;{{config.site.name}}</span>
                         {%if t_config.busuanzi.enable%}
                         <div><span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span></div>
-                        <script async src="{{assets_rt}}/busuanzi.js" onload="window.addEventListener('load',busuanzi);document.addEventListener('pjax:complete',busuanzi);"></script>
+                        <script async src="{{assets_rt}}busuanzi.js" onload="window.addEventListener('load',busuanzi);document.addEventListener('pjax:complete',busuanzi);"></script>
                         {%endif%}
 
                         {%if t_config.footer.lastbuild%}
@@ -26,8 +26,8 @@
                         {%endif%}
                     </div>
                     <div class="mdui-col mdui-text-center mdui-typo">
-                        <div>Powered by <a href="https://github.com/zcmimi/py-blog">py-blog</a></div>
-                        <div>Theme <a href="https://github.com/zcmimi/py-blog-theme-material">material</a></div>
+                        <div>Powered by <a href="https://github.com/zcmimi/py-blog" target="_blank" rel="noopener">py-blog</a></div>
+                        <div>Theme <a href="https://github.com/zcmimi/py-blog-theme-material" target="_blank" rel="noopener">material</a></div>
                     </div>
                 </div>
             </div>

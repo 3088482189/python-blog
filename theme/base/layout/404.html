@@ -1,0 +1,13 @@
+{%extends "base.html"%}
+{%block content%}
+<div>
+    <div>
+        <div>您所访问的页面不存在</div>
+        <div>404 Page Not Found</div>
+    </div>
+    <div>
+        <a href="{{config.site.rt}}">回到首页</a>
+        <a href="javascript:window.history.back();">返回上一页</a>
+    </div>
+</div>
+{%endblock%}

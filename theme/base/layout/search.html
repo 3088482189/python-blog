@@ -1,0 +1,16 @@
+<div>
+    <div>Search</div>
+    <div>
+        <div>
+            <input id="search_input">
+        </div>
+        <div id="search_result"></div>
+    </div>
+</div>
+{%if t_config.search.typ=='local'%}
+<script async src='{{assets_rt}}local_search.js'></script>
+<script>document.getElementById('search_input').onchange=function(){search("{{t_config.search.file}}");}</script>
+{%elif t_config.search.typ=='worker'%}
+<script async src='{{assets_rt}}serverless_search.js'></script>
+<script>document.getElementById('search_input').onchange=function(){search("{{t_config.search.api}}");}</script>
+{%endif%}

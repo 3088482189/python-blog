@@ -2,9 +2,9 @@ avatar: https://cdn.jsdelivr.net/gh/zcmimi/cdn@master/img/avatar_2.webp
 assets_rt: # https://cdn.jsdelivr.net/gh/zcmimi/cdn@master/material/assets
   # 如果有cdn提高assets文件夹的加载速度,请填入地址
   # 否则留空
-theme: clean # (beauty|clean)
 
 randomimg:
+  enable: false
   type: folder # (folder|list)
   path: https://cdn.jsdelivr.net/gh/zcmimi/cdn@master/img/
   cnt: 36
@@ -41,8 +41,8 @@ head_card:
   enable: True
   img: https://cdn.jsdelivr.net/gh/zcmimi/cdn@master/img/1.webp
   logo: https://cdn.jsdelivr.net/gh/zcmimi/cdn@master/img/avatar_2.webp
-  text: material theme for py-blog
-  introduction: a theme with material-design
+  text: Material
+  introduction: A theme for py-blog with material-design
   pages:
     标签云: /tags/
     分类: /categories/
@@ -162,7 +162,7 @@ drawer:
       data: telegram
       color: '#bbb'
 search:
-  typ: local #(local|worker|)
+  typ: file #(file|worker|algolia[todo]|)
   file: /pure_data.json
   api: https://blog-search.zcmimi.top/
 
@@ -177,4 +177,4 @@ busuanzi:
 highlight:
   theme: github
 
-# all_math: True 全站开启数学支持
+all_math: False # 全站开启数学支持

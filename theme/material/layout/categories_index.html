@@ -5,7 +5,7 @@
         {%set path_=path.split('/')%}
         {%for i in path_-%}
         {%if not loop.last%}
-        <a href="{{config.site_rt}}{%for j in range(0,loop.index)-%}{{path_[j]}}/{%-endfor%}">{{i}}/</a>
+        <a href="{{config.site.rt}}{%for j in range(0,loop.index)-%}{{path_[j]}}/{%-endfor%}">{{i}}/</a>
         {%endif%}
         {%-endfor%}
         {%if total%}
@@ -17,7 +17,7 @@
 <div class="mdui-row-xs-1 mdui-row-sm-2 mdui-row-md-4 mdui-row-lg-5" style="word-wrap:break-word;word-break:break-all;padding-top: 50px;">
 {%for i in sub-%}
     <div class="mdui-col">
-        <a href="{{config.site_rt}}{{path}}{{i}}/">
+        <a href="{{config.site.rt}}{{path}}{{i}}/">
             <div class="mdui-card">
                 <div class="mdui-card-primary">
                     <div class="mdui-card-primary-title">{{i}}</div>

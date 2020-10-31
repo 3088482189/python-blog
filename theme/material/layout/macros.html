@@ -1,6 +1,6 @@
 {%macro gen_tags(tags)%}
 {%for tag in tags-%}
-<a href="{{config.site_rt}}tags/{{tag}}/" class="mdui-chip">
+<a href="{{config.site.rt}}tags/{{tag}}/" class="mdui-chip">
     <span class="mdui-chip-title">{{tag}}</span>
 </a>
 {%-endfor%}
@@ -8,7 +8,7 @@
 {%macro gen_categories(categories)%}
 {%for j in categories-%}
 <li class="mdui-menu-item">
-    <a href="{{config.site_rt}}categories/{{j|join('/')}}/">{{j|join('/')}}</a>
+    <a href="{{config.site.rt}}categories/{{j|join('/')}}/">{{j|join('/')}}</a>
 </li>
 {%-endfor%}
 {%endmacro%}
@@ -19,7 +19,7 @@
 
 {%macro randimg()%}
 {%if t_config.randomimg.type=='folder'%}
-    {{t_config.randomimg.path+range(0,t_config.randomimg.cnt)|random|string+'.'+t_config.randomimg.suf}}
+    {{t_config.randomimg.folder+range(0,t_config.randomimg.cnt)|random|string+'.'+t_config.randomimg.suf}}
 {%else%}
     {{t_config.randomimg.list|random}}
 {%endif%}

@@ -1,0 +1,31 @@
+{%extends "base.html"%}
+{%block content%}
+<div class="mdui-card" style="margin-top: 50px;">
+    <div class="mdui-card-content">
+        <div class="mdui-textfield">
+            <input id='passwd' class="mdui-textfield-input" type="password" placeholder="请输入密码" onchange="login()">
+        </div>
+        <button class="mdui-btn" onclick="login()">
+            <i class="mdui-icon mdui-icon-left material-icons">check</i>登录
+        </button>
+    </div>
+</div>
+<script>
+async function login(){
+    var passwd=document.getElementById('passwd').value;
+    var data=await fetch('/admin/api/login',{
+        method:'POST',
+        headers:{'content-type':'application/json'},
+        'body':JSON.stringify({
+            'password':passwd
+        })
+    }).then(resp=>resp.json());
+    console.log(data);
+    if(data.status=='success'){
+        mdui.snackbar({message:'成功'});
+        location.replace('/admin');
+    }
+    else mdui.snackbar({message:data.msg});
+}
+</script>
+{%endblock%}

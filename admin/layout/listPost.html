@@ -1,0 +1,34 @@
+{%extends "base.html"%}
+{%block content%}
+<div class="mdui-textfield mdui-textfield-not-empty" style="padding-top: 50px;padding-bottom: 50px;">
+    <i class="mdui-icon material-icons" style="padding-bottom: 50px;">filter_list</i>
+    <input id="filter" class="mdui-textfield-input" placeholder="筛选" onchange="filter(this.value)">
+</div>
+<ul id='postList' class="mdui-list">
+{%for i in posts-%}
+<a href="/admin/editPost/{{i.pos}}" class="mdui-list-item">
+    <div class="mdui-list-item-content mdui-row-md-3">
+        <div class="mdui-col">
+            <div class="mdui-list-item-title mdui-list-item-one-line">{{i.title}}</div>
+            <div class="mdui-list-item-text mdui-list-item-one-line">{{i.date}}</div>
+        </div>
+        <div class="mdui-col">
+            <div class="mdui-list-item-title">tags</div>
+            <div class="mdui-list-item-text mdui-list-item-one-line">{{i.tags|join(' ')}}</div>
+        </div>
+        <div class="mdui-col">
+            <div class="mdui-list-item-title">categories</div>
+            <div class="mdui-list-item-text mdui-list-item-one-line">{%for j in i.categories%}{{j|join('/')}} {%endfor%}</div>
+        </div>
+    </div>
+</a>
+{%-endfor%}
+</ul>
+
+<script>
+function filter(text){
+    for(var x of document.getElementById('postList').children)
+        x.hidden=x.innerText.indexOf(text)==-1;
+}
+</script>
+{%endblock%}
