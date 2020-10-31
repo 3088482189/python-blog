@@ -42,7 +42,7 @@ def genitem(file,is_post=0,is_page=0):
     meta=MP(lyml(data[1]))
     if isinstance(meta.date,str):meta.date=str2date(meta.date)
     content=''.join(data[2:])
-    preview=content[0:min(len(content),config.preview_len)]
+    preview=content[0:min(len(content),config.index.preview)]
     if '<!-- more -->' in content:
         preview=content.split('<!-- more -->',1)[0]
     name=file.stem
@@ -71,7 +71,7 @@ def genitem(file,is_post=0,is_page=0):
     return x
 
 def gen_index(path,a,ext={}):
-    num=config.page_articles
+    num=config.index.per_page
     tot=len(a);TOT=math.ceil(tot/num)
     res=[]
     for now,i in enumerate(range(0,tot,num),1):

@@ -10,9 +10,9 @@ author: py-blog # 作者
 theme: material # 博客主题
 post_addr: origin # number|pinyin|origin (文章命名方式)
 
-# index
-page_articles: 10 # 索引每页文章数量
-preview_len: 150 # 文章预览(摘要)自动截取字数
+index: # 索引
+  per_page: 10 # 每页文章数量
+  preview: 150 # 文章预览(摘要)自动截取字数
 
 rss: atom # atom|rss|False (atom规范/rss规范/不生成rss)
 sitemap: True # 是否生成站点地图
@@ -25,6 +25,6 @@ repo: # 一键部署git仓库地址
   - git@e.coding.net:zcmimi/blog.git
   - git@github.com:zcmimi/zcmimi.github.io.git
 
-server: # 本地预览服务器配置
+server: # 动态服务器配置
   port: 3399 # 端口
   password: py-blog # 密码
