@@ -379,7 +379,6 @@ def serve():
     @app.route('/rss.xml',methods=['GET'])
     def getRss():
         return Response(env.from_string(rd('tpl/rss.j2')).render(),mimetype='text/xml')
-
     
     def render(x):
         return tpls[x.layout].render(**x,cookies=request.cookies)
@@ -391,8 +390,9 @@ def serve():
     def getPath(path):
         if path in mp:return render(mp[path])
         if Path('source/'+path).exists():return send_from_directory('source/',path)
-        par,file=path.rsplit('/',1);par+='/'
-        if par in mp:return send_from_directory(mp[par].assets,file)
+        if 'posts/' in path:
+            par,file=path.rsplit('/',1);par+='/'
+            if par in mp:return send_from_directory(mp[par].assets,file)
         return send_from_directory('theme/%s/source/'%config.theme,path)
 
     @app.errorhandler(404)
