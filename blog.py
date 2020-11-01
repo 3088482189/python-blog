@@ -241,7 +241,7 @@ def upd():
     read_all()
     sort_posts()
     generate()
-    for i in posts+pages+index+tags_index+categories_index+t_setting.extra_render:mp[rt+i.addr]=i
+    for i in posts+pages+index+tags_index+categories_index+t_setting.extra_render:mp[i.addr]=i
 def set_interval(f,s):
     f()
     t=threading.Timer(s,set_interval,(f,s))
@@ -380,17 +380,20 @@ def serve():
     def getRss():
         return Response(env.from_string(rd('tpl/rss.j2')).render(),mimetype='text/xml')
 
+    
+    def render(x):
+        return tpls[x.layout].render(**x,cookies=request.cookies)
     @app.route('/')
     def getIndex():
-        x=mp['/']
-        return tpls[x.layout].render(**x,cookies=request.cookies)
+        return render(mp[''])
 
     @app.route('/<path:path>',methods=['GET'])
     def getPath(path):
-        x=mp.get(request.path)
-        if x:return tpls[x.layout].render(**x,cookies=request.cookies)
-        elif Path('source/'+path).exists():return send_from_directory('source/',path)
-        else:return send_from_directory('theme/%s/source/'%config.theme,path)
+        if path in mp:return render(mp[path])
+        if Path('source/'+path).exists():return send_from_directory('source/',path)
+        par,file=path.rsplit('/',1);par+='/'
+        if par in mp:return send_from_directory(mp[par].assets,file)
+        return send_from_directory('theme/%s/source/'%config.theme,path)
 
     @app.errorhandler(404)
     def page_not_found(e):
