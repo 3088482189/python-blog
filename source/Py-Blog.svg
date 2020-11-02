@@ -1,0 +1,6 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+    <g>
+        <rect fill="#646464" height="600" width="800" y="0" x="0"/>
+        <text transform="matrix(1,0,0,1,0,0) " xml:space="preserve" text-anchor="start" font-family="Arvo, sans-serif" font-size="220" y="376.5" x="-9.70313" fill="#ffffff">Py-Blog</text>
+    </g>
+</svg>

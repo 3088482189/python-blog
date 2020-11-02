@@ -14,10 +14,8 @@ from jinja2.ext import Extension
 from jinja2.lexer import Token, describe_token
 from jinja2 import TemplateSyntaxError
 
-
 _tag_re = re.compile(r'(?:<(/?)([a-zA-Z0-9_-]+)\s*|(>\s*))(?s)')
 _ws_normalize_re = re.compile(r'[ \t\r\n]+')
-
 
 class StreamProcessContext(object):
 
@@ -30,14 +28,12 @@ class StreamProcessContext(object):
         raise TemplateSyntaxError(message, self.token.lineno,
                                   self.stream.name, self.stream.filename)
 
-
 def _make_dict_from_listing(listing):
     rv = {}
     for keys, value in listing:
         for key in keys:
             rv[key] = value
     return rv
-
 
 class HTMLCompress(Extension):
     isolated_elements = set(['script', 'style', 'noscript', 'textarea'])
@@ -118,74 +114,3 @@ class HTMLCompress(Extension):
             ctx.token = token
             value = self.normalize(ctx)
             yield Token(token.lineno, 'data', value)
-
-
-class SelectiveHTMLCompress(HTMLCompress):
-
-    def filter_stream(self, stream):
-        ctx = StreamProcessContext(stream)
-        strip_depth = 0
-        while 1:
-            if stream.current.type == 'block_begin':
-                if stream.look().test('name:strip') or \
-                   stream.look().test('name:endstrip'):
-                    stream.skip()
-                    if stream.current.value == 'strip':
-                        strip_depth += 1
-                    else:
-                        strip_depth -= 1
-                        if strip_depth < 0:
-                            ctx.fail('Unexpected tag endstrip')
-                    stream.skip()
-                    if stream.current.type != 'block_end':
-                        ctx.fail('expected end of block, got %s' %
-                                 describe_token(stream.current))
-                    stream.skip()
-            if strip_depth > 0 and stream.current.type == 'data':
-                ctx.token = stream.current
-                value = self.normalize(ctx)
-                yield Token(stream.current.lineno, 'data', value)
-            else:
-                yield stream.current
-            stream.next()
-
-def test():
-    from jinja2 import Environment
-    env = Environment(extensions=[HTMLCompress])
-    tmpl = env.from_string('''
-        <html>
-          <head>
-            <title>{{ title }}</title>
-          </head>
-          <script type=text/javascript>
-            if (foo < 42) {
-              document.write('Foo < Bar');
-            }
-          </script>
-          <body>
-            <li><a href="{{ href }}">{{ title }}</a><br>Test   Foo
-            <li><a href="{{ href }}">{{ title }}</a><img src=test.png>
-          </body>
-        </html>
-    ''')
-    print(tmpl.render(title=42, href='index.html'))
-
-    env = Environment(extensions=[SelectiveHTMLCompress])
-    tmpl = env.from_string('''
-        Normal   <span>  unchanged </span> stuff
-        {% strip %}Stripped <span class=foo  >   test   </span>
-        <a href="foo">  test </a> {{ foo }}
-        Normal <stuff>   again {{ foo }}  </stuff>
-        <p>
-          Foo<br>Bar
-          Baz
-        <p>
-          Moep    <span>Test</span>    Moep
-        </p>
-        {% endstrip %}
-    ''')
-    print(tmpl.render(foo=42))
-
-
-if __name__ == '__main__':
-    test()

@@ -1,4 +1,4 @@
-avatar: https://cdn.jsdelivr.net/gh/zcmimi/cdn@master/img/avatar_2.webp
+avatar: /Pb.svg
 assets_rt: # https://cdn.jsdelivr.net/gh/zcmimi/cdn@master/material/assets
   # 如果有cdn提高assets文件夹的加载速度,请填入地址
   # 否则留空
@@ -39,8 +39,8 @@ appbar:
 
 head_card:
   enable: True
-  img: https://cdn.jsdelivr.net/gh/zcmimi/cdn@master/img/1.webp
-  logo: https://cdn.jsdelivr.net/gh/zcmimi/cdn@master/img/avatar_2.webp
+  img: /Py-Blog.svg
+  logo: /Pb.svg
   text: Material
   introduction: A theme for py-blog with material-design
   pages:
@@ -154,7 +154,7 @@ drawer:
     url: https://zcmimi.top/
     icon:
       typ: img
-      data: https://cdn.jsdelivr.net/gh/zcmimi/cdn@master/img/avatar_2.webp
+      data: https://cdn.jsdelivr.net/gh/zcmimi/cdn@master/img/avatar/avatar64x64.webp
   - content: Traveling
     url: https://travellings.now.sh/
     icon:

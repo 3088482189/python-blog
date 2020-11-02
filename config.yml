@@ -4,7 +4,7 @@ site:
   name: py-blog # 站点名称
   description: py-blog演示站点 # 站点描述
   keywords: python blog 博客 # 站点关键词
-  icon: # 站点图标
+  icon: /Pb.svg # 站点图标
 lang: zh-CN # 站点语言
 author: py-blog # 作者
 theme: material # 博客主题
