@@ -1,6 +1,6 @@
 ## py-blog
 
-![](https://py-blog.zcmimi.top/img/Pb.svg)
+<center><img src="https://py-blog.zcmimi.top/img/Pb.svg"></center>
 
 A fast and useful static blog builder, based on `python3`
 
