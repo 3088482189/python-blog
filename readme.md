@@ -8,6 +8,8 @@ A fast and useful static blog builder, based on `python3`
 
 [文档](https://py-blog.zcmimi.top/)
 
+[demo](https://blog.zcmimi.top/)
+
 ## 特点
 
 1. 简单、易用,只需要安装`python3`与`pip`即可使用
