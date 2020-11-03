@@ -3,7 +3,7 @@ class Map(dict):
     __getattr__=dict.get
     __delattr__=dict.__delitem__
     def has(self,k):
-        return self.k!=None
+        return self.get(k)!=None
 
 def turn(x):
     if type(x)==dict:
