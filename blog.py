@@ -426,7 +426,7 @@ def serve_static():
         if not path or path.endswith('/'):path+='index.html'
         elif '.' not in path.split('/')[-1]:path+='/index.html'
         return app.send_static_file(path)
-    app.run(port=config.server.port)
+    app.run(host='0.0.0.0',port=config.server.port)
 # cmd =========================================================
 
 def new_post(data):
