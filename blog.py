@@ -322,8 +322,9 @@ def serve():
     from flask import Flask,request,make_response,abort,Response,send_from_directory,redirect
     app=Flask(
         __name__,
-        static_url_path='/admin/assets/',static_folder='admin/assets'
+        static_url_path='/admin/assets/',static_folder='admin/assets',
     )
+    app.debug=DEBUG
 
     @app.route('/admin/login',methods=['GET'])
     def getLogin():
@@ -389,8 +390,9 @@ def serve():
 
     @app.route('/<path:path>',methods=['GET'])
     def getPath(path):
+        print(path)
         if path in mp:return render(mp[path])
-        if Path('source/'+path).exists():
+        if Path('source/'+path).is_file():
             return send_from_directory('source/',path)
         m=re.match(r'posts/([^/]+)/(.+)',path)
         if m:
@@ -400,8 +402,8 @@ def serve():
         if m:
             par,file=m.group(1,2);par+='/'
             if par in mp:return send_from_directory(mp[par].assets,file)
-        if (tSrc/path).exists():
-            return send_from_directory(tSrc,path)
+        if (tSrc/'source'/path).is_file():
+            return send_from_directory(tSrc/'source',path)
         abort(404)
 
     @app.errorhandler(404)
