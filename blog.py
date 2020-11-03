@@ -24,12 +24,13 @@ def op(path,data):
     path.open('w',encoding='utf-8').write(data)
 
 config=MP(lyml(rd('config.yml')))
+tSrc=Path('theme/%s/'%config.theme)
 dest=config.dest
 Dest=Path(dest)
 DEBUG=config.debug
 rt=config.site.rt=urlparse(config.site.url).path
-t_config=MP(lyml(rd('theme/%s/config.yml'%config.theme)))
-t_setting=MP(lyml(rd('theme/%s/setting.yml'%config.theme)))
+t_config=MP(lyml(rd(tSrc/'config.yml')))
+t_setting=MP(lyml(rd(tSrc/'setting.yml')))
 
 posts,pages=[],[]
 tags,categories=MP(),MP()
@@ -133,7 +134,7 @@ def generate():
     for tag in tags:tags_index.extend(gen_index('tags/%s/'%tag,tags[tag],{'tag':tag,'layout':'tags_index'}))
     gen_categories_index('categories/',categories)
 def CpAssets():
-    for i in Path('theme/%s/source'%config.theme).iterdir():cp(i,Dest/i.stem)
+    for i in (tSrc/'source/').iterdir():cp(i,Dest/i.stem)
     for i in Path('source').glob('[!_]*'):cp(i,Dest/i.name)
     for x in posts+pages:
         if x.assets.exists():cp(x.assets,Path(Dest/x.addr))
@@ -186,7 +187,7 @@ def render_pure_data():
     } for x in posts+pages]))
 def init_env():
     global env,tpls
-    env=Environment(loader=FileSystemLoader('theme/%s/layout/'%config.theme),trim_blocks=1,extensions=['jinja2htmlcompress.HTMLCompress'])
+    env=Environment(loader=FileSystemLoader(str(tSrc/'layout/')),trim_blocks=1,extensions=['jinja2htmlcompress.HTMLCompress'])
     env.globals.update(
         config=config,
         t_config=t_config,
@@ -249,16 +250,16 @@ def set_interval(f,s):
     return t
 def init_admin():
     admin.env=Environment(loader=FileSystemLoader('admin/layout/'),trim_blocks=1)
-    admin.env.globals.update(**{
-        'config':config,
-        't_config':t_config,
-        't_setting':t_setting,
-        'data':{
+    admin.env.globals.update(
+        config=config,
+        t_config=t_config,
+        t_setting=t_setting,
+        data={
             'posts':posts,'pages':pages,
             'tags':tags,'categories':categories,
             'index':index,'tags_index':tags_index,'categories_index':categories_index
         }
-    })
+    )
     admin.env.filters=env.filters
     admin.env.filters.update(
         toyaml=dyml,
@@ -278,36 +279,37 @@ rmPost=lambda x:os.remove('source/_posts/%s.md'%x.filename)
 def postsUpd():
     sort_posts()
     generate()
-    for i in index+tags_index+categories_index:mp[rt+i['addr']]=i
+    for i in index+tags_index+categories_index:mp[i['addr']]=i
 def apiEditPost(data):
-    data['meta']=del_none(lyml(data['meta']))
-    if 'date' not in data['meta']:data['meta']['date']=datetime.now().replace(microsecond=0)
-    elif isinstance(data['meta']['date'],str):data['meta']['date']=str2date(data['meta']['date'])
-    data['meta'].update({
-        'title':data['title'],'top':data['top'],
-        'tags':data['tags'],'categories':data['categories']
-    })
-
-    file=Path('source/_posts/%s.md'%data['filename'])
+    data=MP(data)
+    data.meta=MP(lyml(data.meta))
+    if not data.meta.date:data.meta.date=datetime.now().replace(microsecond=0)
+    elif isinstance(data.meta.date,str):data.meta.date=str2date(data.meta.date)
+    data.meta.update(
+        title=data.title,top=data.top,
+        tags=data.tags,categories=data.categories
+    )
+    file=Path('source/_posts/%s.md'%data.filename)
     file.open('w',encoding='utf-8').write(
         '---\n'+
-        dyml(data['meta'])+
+        dyml(dict(data.meta))+
         '\n---\n'+
-        data['content']
+        data.content
     )
     x=genitem(file,is_post=1)
-    if 'pos' in data:
-        post=posts[data['pos']]
-        if post['filename']!=data['filename']:rmPost(post)
-        posts[data['pos']]=x
+    if data.has('pos'):
+        post=posts[data.pos]
+        if post.filename!=data.filename:rmPost(post)
+        posts[data.pos]=x
     else:posts.append(x)
     postsUpd()
-    mp[rt+x.addr]=x
-    return {'pos':x.pos,'status':'success','redirect':data.get('pos')!=x.pos}
+    mp[x.addr]=x
+    return {'pos':x.pos,'status':'success','redirect':data.pos!=x.pos}
 def apiRmPost(data):
+    data=MP(data)
     if 'pos' not in data:return {'status':'failed'}
-    rmPost(posts[data['pos']])
-    posts.pop(data['pos']),mp.pop(rt+posts[data['pos']]['addr'])
+    rmPost(posts[data.pos])
+    mp.pop(posts[data.pos].addr);posts.pop(data.pos)
     postsUpd()
     return {'status':'success'}
 def serve():
@@ -322,7 +324,6 @@ def serve():
         __name__,
         static_url_path='/admin/assets/',static_folder='admin/assets'
     )
-    app.config.update(config)
 
     @app.route('/admin/login',methods=['GET'])
     def getLogin():
@@ -389,23 +390,35 @@ def serve():
     @app.route('/<path:path>',methods=['GET'])
     def getPath(path):
         if path in mp:return render(mp[path])
-        if Path('source/'+path).exists():return send_from_directory('source/',path)
-        if 'posts/' in path:
-            par,file=path.rsplit('/',1);par+='/'
+        if Path('source/'+path).exists():
+            return send_from_directory('source/',path)
+        m=re.match(r'posts/([^/]+)/(.+)',path)
+        if m:
+            par,file=m.group(1,2);par='posts/%s/'%par
             if par in mp:return send_from_directory(mp[par].assets,file)
-        return send_from_directory('theme/%s/source/'%config.theme,path)
+        m=re.match(r'([^/]+)/(.+)',path)
+        if m:
+            par,file=m.group(1,2);par+='/'
+            if par in mp:return send_from_directory(mp[par].assets,file)
+        if (tSrc/path).exists():
+            return send_from_directory(tSrc,path)
+        abort(404)
 
     @app.errorhandler(404)
     def page_not_found(e):
-        if '/404.html' in mp:return tpls[mp['/404.html']['layout']].render(**mp['/404.html'])
-        elif Path('source/404.html').is_file():return send_from_directory('source/','404.html')
+        if mp.has('404.html'):return render(mp['404.html'])
+        elif Path('source/404.html').is_file():
+            return send_from_directory('source/','404.html')
         return '404 not found',404
+    
+    if DEBUG:
+        pass
 
     return app
 def serve_static():
     from flask import Flask
     app=Flask(__name__,static_folder=config.dest)
-    @app.route('/',defaults={'path': ''})
+    @app.route('/',defaults={'path':''})
     @app.route('/<path:path>')
     def statics(path):
         if not path or path.endswith('/'):path+='index.html'

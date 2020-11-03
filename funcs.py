@@ -2,6 +2,8 @@ class Map(dict):
     __setattr__=dict.__setitem__
     __getattr__=dict.get
     __delattr__=dict.__delitem__
+    def has(self,k):
+        return self.k!=None
 
 def turn(x):
     if type(x)==dict:
@@ -33,8 +35,8 @@ except:ymloader=yaml.SafeLoader
 lyml=lambda s:yaml.load(s,Loader=ymloader)
 dyml=lambda x:yaml.dump(x,allow_unicode=True)
 def rd(path):
-    return open(path,encoding='utf-8').read()
-    # return Path(path).open(encoding='utf-8').read()
+    if isinstance(path,str):return open(path,encoding='utf-8').read()
+    else:return Path(path).open(encoding='utf-8').read()
 def cp(src,dst):
     if src.is_dir():
         if dst.exists():shutil.rmtree(dst)
