@@ -1,0 +1,7 @@
+pyyaml
+pycryptodome
+jinja2
+flask
+pypinyin
+requests
+htmlmin
